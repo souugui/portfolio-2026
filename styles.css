@@ -1,0 +1,790 @@
+/* CSS Variables & Reset */
+:root {
+    --bg-color: #222222;
+    --text-color: #afafaf;
+    --text-light: #bfbfbf;
+    --accent-color: #ffffff;
+    --sidebar-width: 200px;
+    --gutter: 24px;
+
+    --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-duration: 400ms;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+/* Header Removed */
+
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    /* Maintain 16:9 Aspect Ratio to match video */
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.vimeo-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    pointer-events: none;
+    /* Prevent interaction */
+    z-index: 1;
+}
+
+/* Fallback/Overlay */
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    /* 30% opacity */
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    opacity: 0;
+    animation: fadeHero 800ms ease-out forwards 200ms;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-family: 'Bitter', serif;
+    font-weight: 700;
+    font-style: italic;
+    color: #ff6f00;
+    /*letter-spacing: -0.02rem;*/
+    margin-bottom: 4px;
+}
+
+.hero-tagline {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: white;
+    opacity: 0.9;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    /* Safe z-index */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeHero 800ms ease-out forwards 1000ms;
+    cursor: pointer;
+    /* Indication it's clickable */
+    text-decoration: none;
+    /* No underline */
+}
+
+.scroll-indicator span {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.scroll-indicator .line {
+    width: 1px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+@keyframes fadeHero {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Site Logo */
+.site-logo {
+    position: fixed;
+    top: 32px;
+    left: 32px;
+    /* Matched to Avatar Base Size */
+    width: 120px;
+    /* Wider for text logo */
+    height: auto;
+    z-index: 100;
+    opacity: 0.7;
+    /* Full opacity for text */
+    display: flex;
+    /* Center image */
+    align-items: center;
+    justify-content: flex-start;
+    /* Align left */
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.site-logo:hover {
+    opacity: 1;
+}
+
+.site-logo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    /* Fix for "broken" image */
+}
+
+/* Profile Avatar Trigger */
+/* Filter Capsule */
+.filter-capsule {
+    position: fixed;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px;
+    background: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.filter-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.filter-btn:hover {
+    color: white;
+}
+
+.filter-btn.active {
+    background-color: #ff6f00;
+    color: white;
+    font-weight: 600;
+}
+
+/* Mobile Layout Default */
+.filter-capsule {
+    bottom: 24px;
+    right: 24px;
+    /* Bottom Right on Mobile */
+}
+
+/* Profile Avatar Wrapper */
+.profile-wrapper {
+    position: fixed;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* Align Left */
+    gap: 16px;
+
+    /* Mobile: Bottom Left (Aligned with Logo) */
+    bottom: 24px;
+    left: 24px;
+    right: auto;
+
+    /* Animation State */
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+}
+
+.profile-trigger {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    background: #333;
+    padding: 0;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.profile-trigger img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Label Styling */
+.profile-label {
+    display: none;
+    /* Hidden on Mobile/Tablet (No Hover) */
+    background-color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 1.25rem;
+    /* User requested 1.25rem */
+    font-weight: 600;
+    color: #ff6f00;
+    text-transform: lowercase;
+    /* User requested lowercase */
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+/* Tablet: Move to Left (as soon as grid is > 1 column) */
+@media (min-width: 768px) {
+    .profile-wrapper {
+        left: 32px;
+        right: auto;
+        align-items: flex-start;
+        /* Align to Left edge matching Logo */
+    }
+
+    .profile-trigger {
+        width: 7vw;
+        height: 7vw;
+    }
+
+    .site-logo {
+        width: 12vw;
+        /* Wider for text */
+        height: auto;
+        /* Natural height */
+    }
+}
+
+/* Show label on wrapper hover */
+.profile-wrapper:hover .profile-label {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Desktop: Avatar Position & Size correction */
+@media (min-width: 1200px) {
+
+    /* Filter Desktop Positioning */
+    .filter-capsule {
+        bottom: auto;
+        right: auto;
+        top: 32px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        /* Start hidden (slide up) */
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .filter-capsule.visible {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .site-logo {
+        width: 8vw;
+        /* Desktop width */
+        height: auto;
+        /* Match Avatar Height Logic removed */
+        max-width: 130px;
+        /* Cap width */
+        max-height: none;
+
+        top: 32px;
+        left: 32px;
+        /* Aligned with Avatar */
+    }
+
+    /* img styles inherited from base: object-fit: cover */
+
+    .profile-wrapper {
+        top: 80vh;
+        /* Position at 80% down the screen */
+        left: 32px;
+        bottom: auto;
+
+        /* Initial State: Hidden/Off-screen for scroll animation */
+        opacity: 0;
+        /* Start slightly to the left for the slide-in effect */
+        transform: translateX(-40px);
+        pointer-events: none;
+    }
+
+    .profile-wrapper.visible {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    .profile-trigger {
+        width: 5vw;
+        /* 5% of screen width */
+        height: 5vw;
+        max-width: 72px;
+        /* Cap size at 1440px viewport */
+        max-height: 72px;
+        /* Keep it circular */
+        border-radius: 50%;
+        /* Circle */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-label {
+        display: block;
+        /* Restore on Desktop */
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%) translateX(10px);
+        margin-left: 16px;
+    }
+
+    .profile-wrapper:hover .profile-label {
+        transform: translateY(-50%) translateX(0);
+    }
+}
+
+.profile-trigger:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.profile-trigger img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    background-color: white;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    padding: 40px;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-overlay.active .modal-card {
+    transform: translateY(0);
+}
+
+.close-modal {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 24px;
+}
+
+.modal-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-content h2 {
+    font-size: 24px;
+    color: #ff6f00;
+    margin-bottom: 12px;
+}
+
+.modal-bio {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 32px;
+    text-align: left;
+}
+
+.email-copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: transparent;
+    border: 1px solid #e0e0e0;
+    border-radius: 24px;
+    padding: 10px 20px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 24px;
+    /* Space after social icons */
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+    /* Prevent layout shift during text swap */
+}
+
+.email-copy-btn:hover {
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+.email-copy-btn .copy-label {
+    display: none;
+    font-weight: 600;
+}
+
+.email-copy-btn:hover .email-text {
+    display: none;
+}
+
+.email-copy-btn:hover .copy-label {
+    display: block;
+}
+
+.email-copy-btn:active {
+    transform: scale(0.98);
+}
+
+.email-copy-btn.copied {
+    background-color: #00bf63;
+    /* Success Green */
+    border-color: #00bf63;
+    color: white;
+}
+
+.email-copy-btn.copied .copy-label {
+    display: block;
+}
+
+.email-copy-btn.copied .email-text {
+    display: none;
+}
+
+.email-copy-btn.copied .copy-label {
+    visibility: hidden;
+    position: relative;
+}
+
+.email-copy-btn.copied .copy-label::after {
+    content: "Copied!";
+    visibility: visible;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.modal-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+}
+
+.modal-links a {
+    color: #1a1a1a;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-links a:hover {
+    transform: translateY(-2px);
+    opacity: 0.7;
+}
+
+/* Main Content & Grid */
+.main-content {
+    position: relative;
+    background-color: var(--bg-color);
+    padding-top: 48px;
+    /* Separation from hero */
+    padding-bottom: 120px;
+    min-height: 100vh;
+    z-index: 10;
+}
+
+/* Full Width Masonry Layout */
+.grid-container {
+    display: block;
+    column-count: 1;
+    column-gap: 16px;
+    width: 90%;
+    /* Full viewport width */
+    padding: 16px;
+    margin: 5%;
+    max-width: none;
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+    .grid-container {
+        column-count: 2;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1200px) {
+    .grid-container {
+        column-count: 4;
+        padding-left: 240px;
+        /* Space for the "Get to know me" label if needed, or keeping full width */
+        /* Actually, user requested full width. Let's stick to simple padding but maybe slightly more left/right if desired.
+           However, "Full Width" implies removing the big sidebar offset. 
+           Let's keep standard padding and just remove max-width. 
+        */
+        padding: 24px;
+    }
+}
+
+/* Image Tiles & Aspect Ratios */
+.project-tile {
+    /* Strict MVSM Specs */
+    width: 100%;
+    height: auto;
+
+    position: relative;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    opacity: 1;
+    /* Force visible */
+    transform: none;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    /* Masonry Item Support */
+    break-inside: avoid;
+    margin-bottom: 24px;
+
+    /* Rounded Corners */
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Aspect Ratio Utilities Removed - Letting images define height */
+
+.image-wrapper {
+    /* Strict MVSM Specs */
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    /* Removed min-height as requested */
+}
+
+.image-wrapper img {
+    /* Strict MVSM Specs */
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+    /* Preserves aspect ratio fully */
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-tile:hover .image-wrapper img {
+    transform: scale(1.02);
+    /* Subtle zoom */
+}
+
+.tile-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    /* Requirement: 0.15 opacity */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    color: white;
+}
+
+.project-tile:hover .tile-overlay {
+    opacity: 1;
+}
+
+.project-tile:hover {
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+    z-index: 2;
+    /* Bring forward slightly */
+}
+
+.overlay-content {
+    transform: translateY(10px);
+    transition: transform 0.3s ease;
+}
+
+.project-tile:hover .overlay-content {
+    transform: translateY(0);
+}
+
+.overlay-content h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.overlay-content span {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+/* Footer */
+.site-footer {
+    padding: 64px;
+    background-color: #222;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.site-footer .social-links {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+}
+
+/* Utilities */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 101;
+}
+
+.mobile-menu-toggle span {
+    width: 24px;
+    height: 2px;
+    background-color: white;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+        /* Hide for scope of this MVP */
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+}
