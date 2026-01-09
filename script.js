@@ -161,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Elements
     const heroSection = document.getElementById('hero');
     const heroTagline = document.querySelector('.hero-tagline'); // Tagline target
+    const heroTitle = document.querySelector('.hero-title'); // Title target
     const heroVideo = document.querySelector('.video-background');
     const projectTiles = document.querySelectorAll('.project-tile');
 
@@ -260,18 +261,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Text Fade Out
-            if (heroTagline) {
-                // Fade out quickly: 0 to 200px
-                const fadeStart = 0;
-                const fadeEnd = 200;
-                let opacity = 1;
+            const fadeStart = 0;
+            const fadeEnd = 200;
+            let opacity = 1;
 
-                if (scrollY > fadeStart) {
-                    opacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
-                    if (opacity < 0) opacity = 0;
-                }
+            if (scrollY > fadeStart) {
+                opacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+                if (opacity < 0) opacity = 0;
+            }
+
+            if (heroTagline) {
                 heroTagline.style.opacity = opacity;
                 heroTagline.style.transform = `translateY(${scrollY * 0.2}px)`; // Subtle push down
+            }
+
+            if (heroTitle) {
+                heroTitle.style.opacity = opacity;
+                heroTitle.style.transform = `translateY(${scrollY * 0.2}px)`; // Subtle push down
             }
         }
 
