@@ -136,6 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Filter Logic
     const filterButtons = document.querySelectorAll('.filter-btn');
+    const worksSection = document.getElementById('works'); // Target for scroll
+
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             // Remove active class from all
@@ -146,11 +148,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Render
             const filterValue = btn.getAttribute('data-filter');
             renderProjects(filterValue);
+
+            // User Req: Mobile - Scroll to top of section when filtering
+            if (window.innerWidth < 1200 && worksSection) {
+                const offset = 100; // Little buffer
+                const top = worksSection.getBoundingClientRect().top + window.scrollY - offset;
+                window.scrollTo({ top: top, behavior: 'smooth' });
+            }
         });
     });
 
     // Elements
     const heroSection = document.getElementById('hero');
+    const heroTagline = document.querySelector('.hero-tagline'); // Tagline target
     const heroVideo = document.querySelector('.video-background');
     const projectTiles = document.querySelectorAll('.project-tile');
 
@@ -236,17 +246,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 2. Parallax Effect for Video
+    // 2. Parallax Effect for Video & Tagline Fade
     let lastScrollY = window.scrollY;
 
     function updateParallax() {
         const scrollY = window.scrollY;
+
+        // Parallax Video
         if (scrollY < window.innerHeight) {
             const translateY = scrollY * 0.5;
             if (heroVideo) {
                 heroVideo.style.transform = `translate3d(0, ${translateY}px, 0)`;
             }
+
+            // Text Fade Out
+            if (heroTagline) {
+                // Fade out quickly: 0 to 200px
+                const fadeStart = 0;
+                const fadeEnd = 200;
+                let opacity = 1;
+
+                if (scrollY > fadeStart) {
+                    opacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
+                    if (opacity < 0) opacity = 0;
+                }
+                heroTagline.style.opacity = opacity;
+                heroTagline.style.transform = `translateY(${scrollY * 0.2}px)`; // Subtle push down
+            }
         }
+
         lastScrollY = scrollY;
         requestAnimationFrame(updateParallax);
     }

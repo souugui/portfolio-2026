@@ -203,7 +203,8 @@ a {
     align-items: center;
     gap: 4px;
     padding: 6px;
-    background: rgba(30, 30, 30, 0.6);
+    /* User req: More transparent (from 0.6 to 0.4) */
+    background: rgba(30, 30, 30, 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -237,9 +238,15 @@ a {
 
 /* Mobile Layout Default */
 .filter-capsule {
-    bottom: 24px;
+    /* Center align with Avatar (64px height, bottom 24px) */
+    /* Avatar Center = 24px + 32px = 56px from bottom */
+    /* Filter approx 46px height. To center at 56px: 56 - 23 = 33px */
+    bottom: 33px;
     right: 24px;
-    /* Bottom Right on Mobile */
+
+    /* User req: Smaller on mobile */
+    transform: scale(0.9);
+    transform-origin: bottom right;
 }
 
 /* Profile Avatar Wrapper */
