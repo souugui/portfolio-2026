@@ -164,7 +164,11 @@ a {
 .site-logo {
     position: fixed;
     top: 32px;
-    left: 32px;
+
+    /* Mobile: Center Logo */
+    left: 50%;
+    transform: translateX(-50%);
+
     /* Matched to Avatar Base Size */
     width: 120px;
     /* Wider for text logo */
@@ -369,6 +373,8 @@ a {
 
         top: 32px;
         left: 32px;
+        transform: none;
+        /* Reset mobile centering */
         /* Aligned with Avatar */
     }
 
