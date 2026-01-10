@@ -22,9 +22,23 @@
     <!-- Hero Section -->
     <section id="hero" class="hero-section">
         <div class="video-background">
-            <video class="hero-video-file" autoplay muted loop playsinline>
-                <source src="assets/header-video.mp4" type="video/mp4">
-            </video>
+
+            <!-- Desktop Vimeo (Landscape) -->
+            <div class="vimeo-wrapper desktop">
+                <iframe
+                    src="https://player.vimeo.com/video/1153081410?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1"
+                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- Mobile Vimeo (Portrait) -->
+            <div class="vimeo-wrapper mobile">
+                <iframe
+                    src="https://player.vimeo.com/video/1153081430?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1"
+                    frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen>
+                </iframe>
+            </div>
+
             <div class="video-overlay"></div>
         </div>
         <div class="hero-content">

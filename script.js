@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Text Fade Out
             const fadeStart = 0;
-            const fadeEnd = 200;
+            const fadeEnd = 400; // Increased from 200 to 400 for slower fade
             let opacity = 1;
 
             if (scrollY > fadeStart) {
