@@ -262,9 +262,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Text Fade Out
             const fadeStart = 0;
-            // Desktop (>1200px): 400 | Mobile/Tablet (<1200px): 280 (30% faster)
+            // Desktop (>1200px): 400 | Mobile/Tablet (<1200px): 120 (much faster for logo overlap)
             const isSmallScreen = window.innerWidth < 1200;
-            const fadeEnd = isSmallScreen ? 280 : 400;
+            const fadeEnd = isSmallScreen ? 120 : 400;
 
             let opacity = 1;
 
