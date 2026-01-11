@@ -542,6 +542,14 @@ a {
         pointer-events: auto;
     }
 
+    /* Desktop Alignment Explicit */
+    .scroll-indicator {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 40px;
+        /* Standard Desktop Spacing */
+    }
+
     .profile-trigger {
         width: 5vw;
         /* 5% of screen width */
