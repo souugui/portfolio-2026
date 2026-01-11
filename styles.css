@@ -135,34 +135,90 @@ a {
 
     /* iPhone SE / Mobile Typography & Spacing Fixes */
     .hero-title {
-        font-size: 2.5rem;
-        /* 4rem -> 2.5rem (Significant reduction) */
+        font-size: 1.75rem;
+        /* ~30% smaller than previous 2.5rem */
         line-height: 1.1;
+        /* Keep line height */
     }
 
     .hero-tagline {
-        font-size: 0.95rem;
-        /* Reduced from 1.25rem */
+        font-size: 0.6rem;
+        /* ~40% smaller than previous ~1rem */
         line-height: 1.3;
     }
 
     .scroll-indicator {
-        bottom: 15px;
-        /* Push down closer to edge (orig 40px) */
+        bottom: 5px;
+        /* Move down (further from 15px) */
+        left: 50%;
+        transform: translateX(-50%);
+        /* Ensure centralized */
     }
 
     .scroll-indicator .line {
-        height: 35px;
-        /* Shorten line (orig 60px) */
+        height: 23px;
+        /* Reduced by 35% from 35px */
+    }
+
+    .tablet-break {
+        display: none;
+        /* Hide tablet breaks on mobile */
     }
 }
 
 /* Tablet Refinements (768px - 1199px) */
 @media (min-width: 768px) and (max-width: 1199px) {
     .filter-capsule {
-        transform: scale(1.3);
-        /* Increase size by 30% */
+        /* Increase from base. Base is scale(1). Mobile was 0.9. */
+        /* User asked for +40% (total ~1.4 scale) */
+        transform: scale(1.4);
         transform-origin: bottom right;
+        bottom: 40px;
+        /* Adjust spacing for larger size */
+        right: 40px;
+    }
+
+    .profile-wrapper {
+        /* Increase Avatar size by 40% */
+        transform: scale(1.4);
+        transform-origin: bottom left;
+        bottom: 40px;
+        left: 40px;
+    }
+
+    .site-logo {
+        /* Increase by 20% */
+        width: 14.4vw;
+        /* Base 12vw * 1.2 = 14.4vw */
+        max-width: none;
+    }
+
+    .hero-tagline .tablet-break {
+        display: block;
+        /* Force the 3-line break */
+    }
+
+    .scroll-indicator {
+        bottom: 20px;
+        /* Move down */
+        left: 50%;
+        transform: translateX(-50%);
+        /* Centralize */
+    }
+
+    .scroll-indicator .line {
+        height: 40px;
+        /* Base 60 -> -35% = ~39px */
+    }
+}
+
+/* Mobile Logo Specifics: Decrease 50%, Move Up 20% */
+@media (max-width: 768px) {
+    .site-logo {
+        width: 60px;
+        /* 50% of 120px */
+        top: 25px;
+        /* ~20% up from 32px (32 * 0.8 = ~25.6) */
     }
 }
 
