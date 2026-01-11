@@ -262,7 +262,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Text Fade Out
             const fadeStart = 0;
-            const fadeEnd = 400; // Increased from 200 to 400 for slower fade
+            // Desktop (>1200px): 400 | Mobile/Tablet (<1200px): 280 (30% faster)
+            const isSmallScreen = window.innerWidth < 1200;
+            const fadeEnd = isSmallScreen ? 280 : 400;
+
             let opacity = 1;
 
             if (scrollY > fadeStart) {
