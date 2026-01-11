@@ -152,9 +152,7 @@ a {
 
     .scroll-indicator {
         bottom: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: max-content;
+        /* Keep base margin centering (left:0; right:0; margin:auto) */
     }
 
     .scroll-indicator .line {
@@ -201,10 +199,7 @@ a {
 
     .scroll-indicator {
         bottom: 20px;
-        /* Move down */
-        left: 50%;
-        transform: translateX(-50%);
-        /* Centralize */
+        /* Move down but keep base margin centering */
     }
 
     .scroll-indicator .line {
@@ -546,10 +541,8 @@ a {
         pointer-events: auto;
     }
 
-    /* Desktop Alignment Explicit */
+    /* Desktop Alignment Explicit - use base margin centering, no transform override */
     .scroll-indicator {
-        left: 50%;
-        transform: translateX(-50%);
         bottom: 40px;
         /* Standard Desktop Spacing */
     }
@@ -965,9 +958,7 @@ a {
 
     .scroll-indicator {
         bottom: 5px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: max-content;
+        /* Keep base margin centering */
     }
 
     .scroll-indicator .line {
