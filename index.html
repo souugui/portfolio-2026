@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="styles.css?v=1.9">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@1,700&display=swap" rel="stylesheet">
 </head>
@@ -121,12 +123,61 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <main id="works" class="main-content">
         <div class="grid-container" id="project-grid">
             <!-- Projects injected via JavaScript -->
         </div>
     </main>
+
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="project-modal-overlay" aria-hidden="true">
+        <div class="project-modal-content">
+            <!-- Close Button (positioned top-right of modal) -->
+            <button class="project-modal-close" aria-label="Close">↑</button>
+
+            <!-- Left Column: Info -->
+            <div class="modal-left">
+                <h2 class="project-modal-title">Project Title</h2>
+
+                <div class="project-modal-metadata">
+                    <!-- Left Meta Column: year, services, company -->
+                    <div class="meta-column meta-column-left">
+                        <div class="meta-item">
+                            <span class="meta-label">year</span>
+                            <span class="meta-value" data-field="year">2026</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">services</span>
+                            <span class="meta-value" data-field="services">animation</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">company</span>
+                            <span class="meta-value" data-field="company">Globo</span>
+                        </div>
+                    </div>
+                    <!-- Right Meta Column: credits -->
+                    <div class="meta-column meta-column-right">
+                        <div class="meta-item meta-credits">
+                            <span class="meta-label">credits</span>
+                            <div class="credits-list" data-field="credits">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-modal-info">
+                    <span class="meta-label">info</span>
+                    <p class="info-text" data-field="description">Description text goes here...</p>
+                </div>
+            </div>
+
+            <!-- Right Column: Gallery -->
+            <div class="modal-right">
+                <!-- Images populated by JS -->
+            </div>
+        </div>
+    </div>
 
     <footer class="site-footer">
         <p>&copy; 2026 Gui Sousa. All rights reserved.</p>
