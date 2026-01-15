@@ -550,8 +550,35 @@ document.addEventListener('DOMContentLoaded', () => {
         // Populate Gallery
         if (modalRight && project.gallery) {
             modalRight.innerHTML = project.gallery.map(img => `
-                <img src="${img}" alt="${project.title}" loading="lazy">
+                <div class="gallery-image-wrapper">
+                    <button class="fullscreen-btn" aria-label="View fullscreen" data-src="${img}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                    </button>
+                    <img src="${img}" alt="${project.title}" loading="lazy">
+                </div>
             `).join('');
+
+            // Add click handlers for fullscreen buttons
+            modalRight.querySelectorAll('.fullscreen-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const src = btn.getAttribute('data-src');
+                    openImageLightbox(src);
+                });
+            });
+
+            // Add click handlers on images themselves (desktop feature)
+            modalRight.querySelectorAll('.gallery-image-wrapper img').forEach(img => {
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openImageLightbox(img.src);
+                });
+            });
         }
 
         // Show Modal
@@ -574,9 +601,13 @@ document.addEventListener('DOMContentLoaded', () => {
         projectModalClose.addEventListener('click', closeProjectModal);
     }
 
-    // Close Method 2: ESC Key
+    // Close Method 2: ESC Key (only if lightbox is NOT open)
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && projectModal && projectModal.classList.contains('active')) {
+            // Don't close modal if lightbox is open - let lightbox ESC handler take priority
+            if (imageLightbox && imageLightbox.classList.contains('active')) {
+                return; // Let the lightbox ESC handler deal with it
+            }
             closeProjectModal();
         }
     });
@@ -590,5 +621,52 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ============================================
+    // IMAGE LIGHTBOX
+    // ============================================
+
+    const imageLightbox = document.getElementById('image-lightbox');
+    const lightboxImage = document.querySelector('.lightbox-image');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    // Open Lightbox
+    function openImageLightbox(src) {
+        if (!imageLightbox || !lightboxImage) return;
+
+        lightboxImage.src = src;
+        imageLightbox.classList.add('active');
+        imageLightbox.setAttribute('aria-hidden', 'false');
+    }
+
+    // Close Lightbox
+    function closeImageLightbox() {
+        if (!imageLightbox) return;
+
+        imageLightbox.classList.remove('active');
+        imageLightbox.setAttribute('aria-hidden', 'true');
+        lightboxImage.src = '';
+    }
+
+    // Close button
+    if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeImageLightbox);
+    }
+
+    // Click outside image to close
+    if (imageLightbox) {
+        imageLightbox.addEventListener('click', (e) => {
+            if (e.target === imageLightbox) {
+                closeImageLightbox();
+            }
+        });
+    }
+
+    // ESC key to close lightbox
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && imageLightbox && imageLightbox.classList.contains('active')) {
+            closeImageLightbox();
+        }
+    });
 
 });

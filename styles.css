@@ -1009,8 +1009,8 @@ a {
     position: relative;
     display: flex;
     flex-direction: row;
-    width: 100%;
-    max-width: 1100px;
+    width: 95%;
+    max-width: 1500px;
     height: 85vh;
     background: #f5f5f5;
     /* Match gallery background */
@@ -1027,24 +1027,27 @@ a {
     transform: translateY(0);
 }
 
-/* Close Button - Top Right of Modal */
+/* Close Button - now a sibling of modal-content */
 .project-modal-close {
     position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
+    /* Calculate position relative to modal-content on desktop */
+    /* Modal-content is 95% width, max 1500px, centered */
+    top: calc(15vh/2 + 20px);
+    /* 85vh modal + some offset for top */
+    right: calc((100% - min(95%, 1500px)) / 2 + 20px);
+    width: 32px;
+    height: 32px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     background: white;
-    font-size: 20px;
+    font-size: 24px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
     color: #232323;
-    z-index: 10;
+    z-index: 160;
 }
 
 .project-modal-close:hover {
@@ -1256,13 +1259,20 @@ a {
         width: 95%;
         overflow-y: auto;
         /* Full modal scrolls */
+        /* Hide scrollbar */
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .project-modal-content::-webkit-scrollbar {
+        display: none;
     }
 
     .modal-left {
         width: 100%;
         min-width: auto;
         padding: 24px;
-        padding-top: 70px;
+        padding-top: 40px;
         flex-shrink: 0;
         overflow-y: visible;
         /* Let parent scroll */
@@ -1283,6 +1293,23 @@ a {
         flex-direction: column;
         gap: 16px;
     }
+
+    /* Mobile: Close button fixed at bottom-right, aligned with avatar */
+    /* Must be positioned relative to viewport, not modal content */
+    .project-modal-overlay.active .project-modal-close {
+        position: fixed;
+        top: auto !important;
+        left: auto !important;
+        bottom: 24px;
+        right: 24px;
+        width: 56px;
+        height: 56px;
+        font-size: 32px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 200;
+    }
 }
 
 /* Small Mobile (<480px) */
@@ -1295,19 +1322,119 @@ a {
 
     .modal-left {
         padding: 20px;
-        padding-top: 60px;
-    }
-
-    .project-modal-close {
-        top: 16px;
-        left: 20px;
-        /* Align with title */
-        right: auto;
+        padding-top: 40px;
     }
 
     .project-modal-title {
         font-size: 20px;
-        padding-top: 40px;
-        /* Space below close button */
     }
+}
+
+/* ============================================
+   GALLERY FULLSCREEN IMAGE PREVIEW
+   ============================================ */
+
+/* Gallery Image Wrapper */
+.gallery-image-wrapper {
+    position: relative;
+    cursor: pointer;
+}
+
+.gallery-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    transition: filter 0.2s ease;
+}
+
+/* Fullscreen Button on Images */
+.fullscreen-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+    z-index: 5;
+}
+
+.fullscreen-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.gallery-image-wrapper:hover .fullscreen-btn {
+    opacity: 1;
+}
+
+.fullscreen-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Hide fullscreen on mobile - no hover */
+@media (max-width: 1023px) {
+    .fullscreen-btn {
+        display: none;
+    }
+}
+
+/* ============================================
+   IMAGE LIGHTBOX (Fullscreen Overlay)
+   ============================================ */
+
+.image-lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+}
+
+.image-lightbox.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+}
+
+.lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.lightbox-image {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 4px;
 }
