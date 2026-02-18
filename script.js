@@ -3,187 +3,248 @@ document.addEventListener('DOMContentLoaded', () => {
     // Project Data with Extended Fields for Detail Modal
     const projects = [
         {
-            title: "Tropical Pop",
-            client: "Farm Rio",
-            year: 2026,
+            title: "pineapple jar",
+            client: "personal project",
+            year: 2023,
             image: "assets/abacaxi.jpg",
-            category: "commercial",
-            services: ["3D Modeling", "Animation"],
-            company: "Farm Rio",
-            description: "A vibrant tropical-themed campaign featuring 3D fruit animations that bring summer vibes to life. The project involved creating photorealistic pineapple renders with dynamic lighting and playful motion graphics.",
+            category: "personal",
+            services: ["3D modeling", "lookdev"],
+            description: "I was starting to study geometry nodes in blender and used a common known object in Brazil, the Pineapple jar - found primarly in our grandma's houses - to exercise procedural modeling and lookdev",
             credits: [
-                { role: "modeling", name: "Gui Sousa" },
-                { role: "animation", name: "Gui Sousa" },
-                { role: "direction", name: "Farm Rio Team" }
+                { role: "modeling", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" },
             ],
             gallery: ["assets/abacaxi.jpg", "assets/project_square_1.png", "assets/project_wide_1.png"]
         },
         {
-            title: "Neo Tokyo",
-            client: "Kodansha",
-            year: 2026,
+            title: "air diffuser",
+            client: "personal project",
+            year: 2023,
             image: "assets/akira.jpg",
-            category: "commercial",
-            services: ["3D Animation", "Compositing"],
-            company: "Kodansha",
-            description: "Tribute piece inspired by the iconic Akira aesthetic. Cyberpunk cityscapes with neon-drenched atmospheres and high-contrast lighting create an immersive dystopian world.",
+            category: "personal",
+            services: ["modeling", "lookdev", "animation"],
+            description: "project developed with the intention to get better understanding of modeling and shading as well as animation",
             credits: [
-                { role: "modeling", name: "Gui Sousa" },
-                { role: "shading", name: "Gui Sousa" },
-                { role: "compositing", name: "Gui Sousa" }
+                { role: "modeling", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" }
             ],
             gallery: ["assets/akira.jpg", "assets/project_tall_1.png"]
         },
         {
-            title: "Urban Cycle",
-            client: "Cannondale",
+            title: "pedal",
+            client: "personal project",
             year: 2025,
             image: "assets/bike.jpg",
-            category: "commercial",
-            services: ["Product Visualization", "Animation"],
+            category: "personal",
+            services: ["product visualization", "animation"],
             company: "Cannondale",
             description: "Product visualization showcasing the sleek design and engineering of urban cycling. Dynamic camera movements highlight every detail of the bike's frame and components.",
             credits: [
-                { role: "modeling", name: "Gui Sousa" },
-                { role: "lighting", name: "Gui Sousa" }
+                { role: "modeling", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" }
             ],
             gallery: ["assets/bike.jpg", "assets/project_square_1.png"]
         },
         {
-            title: "Mini Automotive",
-            client: "Hot Wheels",
+            title: "rampage rally",
+            client: "clint jones (aka pwnisher)",
             year: 2025,
             image: "assets/carrin.jpg",
             category: "commercial",
-            services: ["Product Animation", "3D Modeling"],
-            company: "Hot Wheels",
-            description: "Miniature car collection brought to life with macro-style 3D renders. Each model features authentic details and nostalgic toy aesthetics with modern rendering techniques.",
+            services: ["animation", "lookdev"],
+            description: "clinton jones, aka pwnisher, does this 1-month challenges regularly to gather the 3d community to exercise their skills and create 6 seconds animations with the provided template. the name of this challenge was rampage rally, mine was inspired by my childhood, when i used to play in my backyard with my toys.",
             credits: [
-                { role: "modeling", name: "Gui Sousa" },
-                { role: "animation", name: "Gui Sousa" }
+                { role: "layout", name: "clinton jones" },
+                { role: "base animation", name: "clinton jones" },
+                { role: "animation", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" }
             ],
             gallery: ["assets/carrin.jpg", "assets/project_wide_1.png"]
         },
         {
-            title: "Portrait Study",
-            client: "Vogue",
-            year: 2025,
+            title: "daily objects",
+            client: "personal project",
+            year: 2024,
             image: "assets/djully.jpg",
-            category: "commercial",
-            services: ["3D Portraiture", "Lighting Design"],
-            company: "Vogue",
-            description: "Editorial portrait study exploring the intersection of fashion and 3D art. Soft lighting and careful attention to skin textures create an intimate, magazine-worthy aesthetic.",
+            category: "personal",
+            services: ["modeling", "lookdev"],
+            description: "project developed to exercise modeling and lookdev for daily objects",
             credits: [
-                { role: "modeling", name: "Gui Sousa" },
-                { role: "lighting", name: "Gui Sousa" },
-                { role: "art direction", name: "Vogue Team" }
+                { role: "modeling", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" },
             ],
             gallery: ["assets/djully.jpg", "assets/project_tall_1.png"]
         },
         {
-            title: "Sunday Vibes",
-            client: "Personal Work",
-            year: 2025,
+            title: "36 day of type",
+            client: "personal project",
+            year: 2023,
             image: "assets/domingo.jpg",
             category: "personal",
-            services: ["3D Illustration", "Scene Design"],
-            company: "Personal",
-            description: "A personal exploration of cozy Sunday aesthetics. Warm colors and soft lighting evoke the feeling of lazy weekend mornings with coffee and good company.",
+            services: ["layout", "lookdev", "compositing"],
+            description: "36 days of type is an annual project that invites designers, illustrator and visual artists to express their unique interpretation of the letters and numbers of the latin alphabet. in 2023 I created my version around the theme 'football', in which i assembled the scenes using pre-made assets, set up lighting, and handled final compositing with a time limit to finish each letter within 3˜5 hours, which didn't work for every letter, but it was a great challenge to be part of.",
             credits: [
-                { role: "everything", name: "Gui Sousa" }
+                { role: "layout", name: "gui sousa" }
+                { role: "lookdev", name: "gui sousa" }
+                { role: "compositing", name: "gui sousa" }                
             ],
             gallery: ["assets/domingo.jpg", "assets/project_square_1.png", "assets/project_wide_1.png"]
         },
         {
-            title: "Life Lately",
-            client: "Editorial",
-            year: 2024,
+            title: "life lately",
+            client: "personal project",
+            year: 2025,
             image: "assets/life-lately.jpg",
             category: "personal",
-            services: ["Scene Design", "Storytelling"],
-            company: "Self-Initiated",
-            description: "Visual diary entries translated into 3D scenes. Each composition captures everyday moments with artistic interpretation and emotional depth.",
+            services: ["layout", "lookdev", "animation"],
+            description: "short animations exploring different geometry nodes, using pre made assets to express a busy moment in my life",
             credits: [
-                { role: "concept", name: "Gui Sousa" },
-                { role: "execution", name: "Gui Sousa" }
+                { role: "layout", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" }
+                { role: "animation", name: "gui sousa" }
             ],
             gallery: ["assets/life-lately.jpg", "assets/project_tall_1.png"]
         },
         {
-            title: "Gaming Setup",
-            client: "Sony",
+            title: "mega builds",
+            client: "personal project",
             year: 2024,
             image: "assets/ps3-fone.jpg",
-            category: "commercial",
-            services: ["Product Visualization", "Lifestyle Render"],
-            company: "Sony",
-            description: "Gaming lifestyle visualization featuring iconic PlayStation hardware. The scene captures the essence of gaming culture with carefully composed product placement.",
+            category: "personal",
+            services: ["modeling", "lookdev", "animation", "compositing"],
+            description: "I was at the mall with my girlfriend when we passed by the toys store and imediately saw this box of 'Mega Construções', a toy we used to play a lot when we were kids and I knew I had to create something about it that week.",
             credits: [
-                { role: "modeling", name: "Gui Sousa" },
-                { role: "compositing", name: "Gui Sousa" }
+                { role: "modeling", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" }
+                { role: "compositing", name: "gui sousa" }
             ],
             gallery: ["assets/ps3-fone.jpg", "assets/project_square_1.png"]
         },
         {
-            title: "Twisted Reality",
-            client: "Adult Swim",
+            title: "halftime show twisted tea",
+            client: "twisted tea",
             year: 2024,
             image: "assets/twisted.jpg",
             category: "commercial",
-            services: ["Character Design", "Animation"],
-            company: "Adult Swim",
-            description: "Surreal animated sequences for late-night programming. Bold colors and unconventional character designs push the boundaries of traditional broadcast graphics.",
+            services: ["lookdev", "animation"],
+            company: "twisted tea",
+            description: "twisted tea was the sponsor for the 2024 Grey Cup Halftime Show and 647 media contacted me to create an animated 3d asset they could use in the video they were animating for the client, so we decided for a 360 animation of their can to provide flexibility for the editors and quickness to deliver, as it took only two days from contact to render.",
             credits: [
-                { role: "design", name: "Gui Sousa" },
-                { role: "animation", name: "Gui Sousa" }
+                { role: "lookdev", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" }
+                { role: "art direction", name: "thiago nunes" }
             ],
             gallery: ["assets/twisted.jpg", "assets/project_wide_1.png", "assets/project_tall_1.png"]
         },
         {
-            title: "Ethereal Monolith",
-            client: "Nat Geo",
-            year: 2023,
+            title: "causos",
+            client: "personal project",
+            year: 2022,
             image: "assets/project_tall_1.png",
-            category: "commercial",
-            services: ["Environment Design", "Lighting"],
-            company: "National Geographic",
-            description: "Abstract environmental piece exploring monumental forms in nature. Atmospheric lighting and scale create a sense of wonder and discovery.",
+            category: "personal",
+            services: ["modeling", "lookdev", "animation"],
+            description: "This project was idealized by Vitória Coelho, who wanted to team up to create a title design based on an urban legend called 'loira do banheiro'(bathroom blonde - a legend that, through her research, originated in a small town called Guaratinguetá involving a famous family from the city and a runway daughter). I was responsible for the 3d side of it (modeling, lookdev, animation) while she directed the final look and added the sound design, 2d animations and video edited.",
             credits: [
-                { role: "environment", name: "Gui Sousa" },
-                { role: "lighting", name: "Gui Sousa" }
+                { role: "modeling", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" }
+                { role: "animation", name: "gui sousa" }
+                { role: "sound design", name: "vitória coelho" }
+                { role: "video editing", name: "vitória coelho" }
+                { role: "art direction", name: "vitória coelho" }
+                { role: "2d motion", name: "vitória coelho" }
             ],
             gallery: ["assets/project_tall_1.png", "assets/project_square_1.png"]
         },
         {
-            title: "Neon Skyline",
-            client: "Blade Runner",
-            year: 2023,
+            title: "led screen scenarios",
+            client: "hora 1 - globo tv",
+            year: 2024,
             image: "assets/project_wide_1.png",
             category: "commercial",
-            services: ["Environment Design", "Compositing"],
-            company: "Warner Bros",
-            description: "Futuristic cityscape inspired by cyberpunk aesthetics. Towering structures bathed in neon light create an immersive vision of tomorrow's megacities.",
+            services: ["layout", "animation", "compositing", "2d motion", "content research"],
+            company: "Globo TV",
+            description: "environments for broadcasting that I had the opportunity to create for the new LED screen debuted by TV Globo on March 24, while working with the Hora 1 team. the goal on the first one was to create an immersive scene to illustrate middle east conflicts, so the host could introduce different stories about the topic, it was done within 3 hours from start to finish (with overnight rendering), using pre made assets, geometry nodes and compositing to unify the final look. the second one was created within two hours using geometry nodes in blender to create the destruction levels of the house's ceilling and help explain different grades of hurricanes when Hurricane Milton, a Category 3 storm, made landfall on Florida's west coast with winds reaching 120 mph",
             credits: [
-                { role: "environment", name: "Gui Sousa" },
-                { role: "compositing", name: "Gui Sousa" }
+                { role: "layout", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" },
+                { role: "compositing", name: "gui sousa" }
+                { role: "2d motion", name: "gui sousa" }
+                { role: "content research", name: "gui sousa" }
             ],
             gallery: ["assets/project_wide_1.png", "assets/project_tall_1.png"]
         },
         {
-            title: "Golden Fractal",
-            client: "Rolex",
-            year: 2023,
+            title: "weather explainer",
+            client: "hora 1 - globo tv",
+            year: 2024,
             image: "assets/project_square_1.png",
             category: "commercial",
-            services: ["Abstract Design", "Motion Graphics"],
-            company: "Rolex",
-            description: "Luxury brand piece featuring abstract golden forms. Mathematical precision meets organic flow in this exploration of timeless elegance.",
+            services: ["layout", "camera animation", "compositing", "2d motion"],
+            company: "Globo TV",
+            description: "environments for the weather report moment that I had the opportunity to create for the new LED screen debuted by TV Globo on March 24, while working with the Hora 1 team. the first one is about animal care, so I got animated assets to created the environment based on the meteorologist request. the second one is about the difference between two temperature measurement methods",
             credits: [
-                { role: "design", name: "Gui Sousa" },
-                { role: "animation", name: "Gui Sousa" }
+                { role: "layout", name: "gui sousa" },
+                { role: "camera animation", name: "gui sousa" },
+                { role: "compositing", name: "gui sousa" }
+                { role: "2d motion", name: "gui sousa" }
             ],
             gallery: ["assets/project_square_1.png", "assets/project_wide_1.png"]
         }
+        {
+            title: "led screen r&d",
+            client: "hora 1 - globo tv",
+            year: 2024,
+            image: "assets/project_wide_1.png",
+            category: "commercial",
+            services: ["layout", "animation", "compositing", "2d motion", "content research"],
+            company: "Globo TV",
+            description: "r&d I did for environments to hora 1 LED screen scenario debuted by TV Globo on March 24. the goal on the first one was to create an immersive scene to illustrate the 2024 american elections, so the host could introduce different stories about the topic, using pre made assets to get full accuracy from the research I did on different versions of the oval office. the second one was modeled almost entirely by me, and the goal was to be thematic scenario for volleyball topics. the third was created when we thought Vinicius Jr was going to win the ballon do'r, so we got it done before to be the possible scenario in case it happened (it should've happen actually)",
+            credits: [
+                { role: "layout", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" },
+                { role: "compositing", name: "gui sousa" }
+                { role: "2d motion", name: "gui sousa" }
+                { role: "content research", name: "gui sousa" }
+            ],
+            gallery: ["assets/project_wide_1.png", "assets/project_tall_1.png"]
+        },
+        {
+            title: "voepass airplane crash",
+            client: "g1 news portal",
+            year: 2025,
+            image: "assets/project_wide_1.png",
+            category: "commercial",
+            services: ["modeling", "lookdev", "animation", "video editing", "2d motion", "content research"],
+            company: "Globo TV",
+            description: "animation created for G1's special page marking the one-year anniversary of the Voepass airplane crash in Vinhedo, São Paulo. We bought the airplane model and recreated the shader as well as the animation following the steps of the accident, from outside to inside of the plane using flight radar and black box records",
+            credits: [
+                { role: "modeling", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" }
+                { role: "video editing", name: "gui sousa" }
+                { role: "2d motion", name: "gui sousa" }
+                { role: "content research", name: "gui sousa" }
+            ],
+            gallery: ["assets/project_wide_1.png", "assets/project_tall_1.png"]
+        },
+        {
+            title: "beverage can animation",
+            client: "truly",
+            year: 2024,
+            image: "assets/twisted.jpg",
+            category: "commercial",
+            services: ["lookdev", "animation"],
+            company: "truly",
+            description: "647 media contacted me to create an animated 3d asset they could use in the video they were animating for the client, so we decided for a 360 animation of their can to provide flexibility for the editors and quickness to deliver, as it took only two days from contact to render.",
+            credits: [
+                { role: "lookdev", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" }
+                { role: "art direction", name: "thiago nunes" }
+            ],
+            gallery: ["assets/twisted.jpg", "assets/project_wide_1.png", "assets/project_tall_1.png"]
+        },                        
     ];
 
     const gridContainer = document.getElementById('project-grid');
