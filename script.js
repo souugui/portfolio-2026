@@ -85,9 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
             services: ["layout", "lookdev", "compositing"],
             description: "36 days of type is an annual project that invites designers, illustrator and visual artists to express their unique interpretation of the letters and numbers of the latin alphabet. in 2023 I created my version around the theme 'football', in which i assembled the scenes using pre-made assets, set up lighting, and handled final compositing with a time limit to finish each letter within 3˜5 hours, which didn't work for every letter, but it was a great challenge to be part of.",
             credits: [
-                { role: "layout", name: "gui sousa" }
-                { role: "lookdev", name: "gui sousa" }
-                { role: "compositing", name: "gui sousa" }                
+                { role: "layout", name: "gui sousa" },
+                { role: "lookdev", name: "gui sousa" },
+                { role: "compositing", name: "gui sousa" }
             ],
             gallery: ["assets/domingo.jpg", "assets/project_square_1.png", "assets/project_wide_1.png"]
         },
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "short animations exploring different geometry nodes, using pre made assets to express a busy moment in my life",
             credits: [
                 { role: "layout", name: "gui sousa" },
-                { role: "lookdev", name: "gui sousa" }
+                { role: "lookdev", name: "gui sousa" },
                 { role: "animation", name: "gui sousa" }
             ],
             gallery: ["assets/life-lately.jpg", "assets/project_tall_1.png"]
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             credits: [
                 { role: "modeling", name: "gui sousa" },
                 { role: "lookdev", name: "gui sousa" },
-                { role: "animation", name: "gui sousa" }
+                { role: "animation", name: "gui sousa" },
                 { role: "compositing", name: "gui sousa" }
             ],
             gallery: ["assets/ps3-fone.jpg", "assets/project_square_1.png"]
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "twisted tea was the sponsor for the 2024 Grey Cup Halftime Show and 647 media contacted me to create an animated 3d asset they could use in the video they were animating for the client, so we decided for a 360 animation of their can to provide flexibility for the editors and quickness to deliver, as it took only two days from contact to render.",
             credits: [
                 { role: "lookdev", name: "gui sousa" },
-                { role: "animation", name: "gui sousa" }
+                { role: "animation", name: "gui sousa" },
                 { role: "art direction", name: "thiago nunes" }
             ],
             gallery: ["assets/twisted.jpg", "assets/project_wide_1.png", "assets/project_tall_1.png"]
@@ -148,11 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "This project was idealized by Vitória Coelho, who wanted to team up to create a title design based on an urban legend called 'loira do banheiro'(bathroom blonde - a legend that, through her research, originated in a small town called Guaratinguetá involving a famous family from the city and a runway daughter). I was responsible for the 3d side of it (modeling, lookdev, animation) while she directed the final look and added the sound design, 2d animations and video edited.",
             credits: [
                 { role: "modeling", name: "gui sousa" },
-                { role: "lookdev", name: "gui sousa" }
-                { role: "animation", name: "gui sousa" }
-                { role: "sound design", name: "vitória coelho" }
-                { role: "video editing", name: "vitória coelho" }
-                { role: "art direction", name: "vitória coelho" }
+                { role: "lookdev", name: "gui sousa" },
+                { role: "animation", name: "gui sousa" },
+                { role: "sound design", name: "vitória coelho" },
+                { role: "video editing", name: "vitória coelho" },
+                { role: "art direction", name: "vitória coelho" },
                 { role: "2d motion", name: "vitória coelho" }
             ],
             gallery: ["assets/project_tall_1.png", "assets/project_square_1.png"]
@@ -169,8 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
             credits: [
                 { role: "layout", name: "gui sousa" },
                 { role: "animation", name: "gui sousa" },
-                { role: "compositing", name: "gui sousa" }
-                { role: "2d motion", name: "gui sousa" }
+                { role: "compositing", name: "gui sousa" },
+                { role: "2d motion", name: "gui sousa" },
                 { role: "content research", name: "gui sousa" }
             ],
             gallery: ["assets/project_wide_1.png", "assets/project_tall_1.png"]
@@ -187,11 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
             credits: [
                 { role: "layout", name: "gui sousa" },
                 { role: "camera animation", name: "gui sousa" },
-                { role: "compositing", name: "gui sousa" }
+                { role: "compositing", name: "gui sousa" },
                 { role: "2d motion", name: "gui sousa" }
             ],
             gallery: ["assets/project_square_1.png", "assets/project_wide_1.png"]
-        }
+        },
         {
             title: "led screen r&d",
             client: "hora 1 - globo tv",
@@ -204,8 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
             credits: [
                 { role: "layout", name: "gui sousa" },
                 { role: "animation", name: "gui sousa" },
-                { role: "compositing", name: "gui sousa" }
-                { role: "2d motion", name: "gui sousa" }
+                { role: "compositing", name: "gui sousa" },
+                { role: "2d motion", name: "gui sousa" },
                 { role: "content research", name: "gui sousa" }
             ],
             gallery: ["assets/project_wide_1.png", "assets/project_tall_1.png"]
@@ -222,9 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
             credits: [
                 { role: "modeling", name: "gui sousa" },
                 { role: "lookdev", name: "gui sousa" },
-                { role: "animation", name: "gui sousa" }
-                { role: "video editing", name: "gui sousa" }
-                { role: "2d motion", name: "gui sousa" }
+                { role: "animation", name: "gui sousa" },
+                { role: "video editing", name: "gui sousa" },
+                { role: "2d motion", name: "gui sousa" },
                 { role: "content research", name: "gui sousa" }
             ],
             gallery: ["assets/project_wide_1.png", "assets/project_tall_1.png"]
@@ -240,11 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "647 media contacted me to create an animated 3d asset they could use in the video they were animating for the client, so we decided for a 360 animation of their can to provide flexibility for the editors and quickness to deliver, as it took only two days from contact to render.",
             credits: [
                 { role: "lookdev", name: "gui sousa" },
-                { role: "animation", name: "gui sousa" }
+                { role: "animation", name: "gui sousa" },
                 { role: "art direction", name: "thiago nunes" }
             ],
             gallery: ["assets/twisted.jpg", "assets/project_wide_1.png", "assets/project_tall_1.png"]
-        },                        
+        },
     ];
 
     const gridContainer = document.getElementById('project-grid');
