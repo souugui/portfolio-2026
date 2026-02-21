@@ -59,13 +59,13 @@ const projects = [
         gallery: ["assets/carrin.jpg", "assets/project_wide_1.png"]
     },
     {
-        title: "daily objects",
+        title: "ps3 headset",
         client: "personal project",
         year: 2024,
         image: "assets/djully.jpg",
         category: "personal",
         services: ["modeling", "lookdev"],
-        description: "project developed to exercise modeling and lookdev for daily objects",
+        description: "project developed to exercise modeling and lookdev",
         credits: [
             { role: "modeling", name: "gui sousa" },
             { role: "lookdev", name: "gui sousa" }

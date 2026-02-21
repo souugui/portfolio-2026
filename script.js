@@ -355,7 +355,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Populate Company
             const companyField = document.querySelector('[data-field="company"]');
-            if (companyField) companyField.textContent = project.company || '';
+            if (companyField) {
+                companyField.textContent = project.company || '';
+                // Hide the entire meta-item row when there's no company
+                const companyItem = companyField.closest('.meta-item');
+                if (companyItem) {
+                    companyItem.style.display = project.company ? '' : 'none';
+                }
+            }
 
             // Populate Description
             const descField = document.querySelector('[data-field="description"]');
@@ -410,6 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
             projectModal.classList.add('active');
             projectModal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
+            document.body.classList.add('project-modal-open');
         }
 
         // Close Project Modal
@@ -419,6 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
             projectModal.classList.remove('active');
             projectModal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = ''; // Restore scroll
+            document.body.classList.remove('project-modal-open');
         }
 
         // Close Method 1: Close Button

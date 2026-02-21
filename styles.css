@@ -339,6 +339,14 @@ a {
     transition: opacity 0.3s ease;
 }
 
+/* Hide logo on mobile when project modal is open */
+@media (max-width: 767px) {
+    body.project-modal-open .site-logo {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
 .site-logo:hover {
     opacity: 1;
 }
@@ -1226,6 +1234,7 @@ a {
     .project-modal-metadata {
         flex-direction: row;
         gap: 40px;
+        align-items: flex-start;
     }
 
     .meta-column-left {
@@ -1272,7 +1281,7 @@ a {
         width: 100%;
         min-width: auto;
         padding: 24px;
-        padding-top: 40px;
+        padding-top: 80px;
         flex-shrink: 0;
         overflow-y: visible;
         /* Let parent scroll */
