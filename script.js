@@ -37,9 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Priority loading for first few items
                 const loadingAttr = index < 4 ? '' : 'loading="lazy"';
 
+                const isVideo = /\.(mp4|mov|mkv|webm|m4v)$/i.test(project.image);
+                // Encode each path segment individually so spaces and special chars work
+                const mediaSrc = project.image.split('/').map(encodeURIComponent).join('/');
+
+                const mediaHTML = isVideo
+                    ? `<video src="${mediaSrc}" autoplay muted loop playsinline></video>`
+                    : `<img src="${mediaSrc}" alt="${project.title} - ${project.client}" ${loadingAttr}>`;
+
                 article.innerHTML = `
                 <div class="image-wrapper">
-                    <img src="${project.image}" alt="${project.title} - ${project.client}" ${loadingAttr}>
+                    ${mediaHTML}
                     <div class="tile-overlay">
                         <div class="overlay-content">
                             <h3>${project.title}</h3>
@@ -65,6 +73,55 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initial Render
         renderProjects('all');
 
+        // ── Grid Masonry: calculate row spans after images load ──────────
+
+
+        function applyMasonrySpans() {
+            const ITEM_GAP = 16;
+            const tiles = gridContainer.querySelectorAll('.project-tile');
+            tiles.forEach(tile => {
+                // Reset so we get the natural content height
+                tile.style.gridRowEnd = '';
+                const height = tile.getBoundingClientRect().height;
+                // span = height + gap → places next item exactly GAP px below
+                tile.style.gridRowEnd = `span ${Math.ceil(height) + ITEM_GAP}`;
+            });
+        }
+
+        function waitForImagesAndApply() {
+            const imgs = [...gridContainer.querySelectorAll('img')];
+            const videos = [...gridContainer.querySelectorAll('video')];
+            const media = [...imgs, ...videos];
+            let loaded = 0;
+            if (media.length === 0) { applyMasonrySpans(); return; }
+
+            function onLoaded() {
+                loaded++;
+                if (loaded === media.length) applyMasonrySpans();
+            }
+
+            imgs.forEach(img => {
+                if (img.complete) { onLoaded(); }
+                else {
+                    img.addEventListener('load', onLoaded);
+                    img.addEventListener('error', onLoaded);
+                }
+            });
+
+            videos.forEach(video => {
+                if (video.readyState >= 1) { onLoaded(); } // HAVE_METADATA
+                else {
+                    video.addEventListener('loadedmetadata', onLoaded);
+                    video.addEventListener('error', onLoaded);
+                }
+            });
+        }
+
+        waitForImagesAndApply();
+
+        // Re-apply on resize (column count changes between breakpoints)
+        window.addEventListener('resize', applyMasonrySpans);
+
         // Filter Logic
         const filterButtons = document.querySelectorAll('.filter-btn');
         const worksSection = document.getElementById('works'); // Target for scroll
@@ -79,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Render
                 const filterValue = btn.getAttribute('data-filter');
                 renderProjects(filterValue);
+                waitForImagesAndApply();
 
                 // User Req: Mobile - Scroll to top of section when filtering
                 if (window.innerWidth < 1200 && worksSection) {
@@ -291,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 4. Smooth Anchor Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        document.querySelectorAll('a[href^="#"]:not(.project-link)').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href');
@@ -347,10 +405,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const yearField = document.querySelector('[data-field="year"]');
             if (yearField) yearField.textContent = project.year;
 
-            // Populate Services
-            const servicesField = document.querySelector('[data-field="services"]');
-            if (servicesField) {
-                servicesField.textContent = project.services ? project.services.join(', ') : '';
+            // Populate My Role
+            const myRoleField = document.querySelector('[data-field="my role"]');
+            if (myRoleField) {
+                myRoleField.textContent = project['my role'] ? project['my role'].join(', ') : '';
             }
 
             // Populate Company
@@ -368,50 +426,199 @@ document.addEventListener('DOMContentLoaded', () => {
             const descField = document.querySelector('[data-field="description"]');
             if (descField) descField.textContent = project.description || '';
 
+            // Populate Link (optional)
+            const linkField = document.querySelector('[data-field="link"]');
+            if (linkField) {
+                if (project.link) {
+                    linkField.href = project.link.url;
+                    linkField.textContent = project.link.label;
+                    linkField.style.display = '';
+                } else {
+                    linkField.style.display = 'none';
+                }
+            }
+
             // Populate Credits
             const creditsField = document.querySelector('[data-field="credits"]');
-            if (creditsField && project.credits) {
-                creditsField.innerHTML = project.credits.map(credit => `
+            if (creditsField) {
+                const creditsColumn = creditsField.closest('.meta-column-right');
+                const hasCredits = project.credits && project.credits.length > 0;
+                if (creditsColumn) {
+                    creditsColumn.style.display = hasCredits ? '' : 'none';
+                }
+                if (hasCredits) {
+                    creditsField.innerHTML = project.credits.map(credit => `
                 <div class="credit-item">
                     <span class="credit-role">${credit.role}</span>
                     <span class="credit-name">${credit.name}</span>
                 </div>
             `).join('');
+                }
             }
 
             // Populate Gallery
             if (modalRight && project.gallery) {
-                modalRight.innerHTML = project.gallery.map(img => `
+                const isVid = (src) => /\.(mp4|mov|mkv|webm|m4v)$/i.test(src);
+                const isVimeo = (src) => src.startsWith('https://player.vimeo.com');
+                const encodeSrc = (src) => src.split('/').map(encodeURIComponent).join('/');
+
+                modalRight.innerHTML = project.gallery.map(item => {
+                    const src = encodeSrc(item);
+                    let media;
+                    if (isVimeo(item)) {
+                        const sep = item.includes('?') ? '&' : '?';
+                        const vimeoSrc = item + sep + 'controls=0&autoplay=0&muted=1&loop=0&title=0&byline=0&portrait=0';
+                        media = `<div class="gallery-vimeo-wrapper">
+                            <iframe src="${vimeoSrc}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen></iframe>
+                            <div class="vimeo-click-shield"></div>
+                            <button class="video-play-btn" aria-label="Play video">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"></polygon></svg>
+                            </button>
+                            <button class="video-fullscreen-btn" aria-label="View fullscreen">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <polyline points="9 21 3 21 3 15"></polyline>
+                                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                                </svg>
+                            </button>
+                        </div>`;
+                    } else if (isVid(item)) {
+                        media = `<div class="gallery-video-wrapper">
+                            <video src="${src}" muted playsinline preload="metadata"></video>
+                            <button class="video-play-btn" aria-label="Play video">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"></polygon></svg>
+                            </button>
+                            <button class="video-fullscreen-btn" aria-label="View fullscreen">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <polyline points="9 21 3 21 3 15"></polyline>
+                                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                                </svg>
+                            </button>
+                        </div>`;
+                    } else {
+                        media = `<img src="${src}" alt="${project.title}" loading="lazy">`;
+                    }
+                    return `
                 <div class="gallery-image-wrapper">
-                    <button class="fullscreen-btn" aria-label="View fullscreen" data-src="${img}">
+                    ${(!isVid(item) && !isVimeo(item)) ? `<button class="fullscreen-btn" aria-label="View fullscreen" data-src="${src}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="15 3 21 3 21 9"></polyline>
                             <polyline points="9 21 3 21 3 15"></polyline>
                             <line x1="21" y1="3" x2="14" y2="10"></line>
                             <line x1="3" y1="21" x2="10" y2="14"></line>
                         </svg>
-                    </button>
-                    <img src="${img}" alt="${project.title}" loading="lazy">
-                </div>
-            `).join('');
+                    </button>` : ''}
+                    ${media}
+                </div>`;
+                }).join('');
 
-                // Add click handlers for fullscreen buttons
+                // Fullscreen button handlers (images only)
                 modalRight.querySelectorAll('.fullscreen-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        const src = btn.getAttribute('data-src');
-                        openImageLightbox(src);
+                        openImageLightbox(btn.getAttribute('data-src'));
                     });
                 });
 
-                // Add click handlers on images themselves (desktop feature)
+                // Click-to-lightbox on images themselves
                 modalRight.querySelectorAll('.gallery-image-wrapper img').forEach(img => {
                     img.addEventListener('click', (e) => {
                         e.stopPropagation();
                         openImageLightbox(img.src);
                     });
                 });
+
+                // Video: play/pause on click, fading play button, fullscreen button
+                modalRight.querySelectorAll('.gallery-video-wrapper').forEach(wrapper => {
+                    const video = wrapper.querySelector('video');
+                    const playBtn = wrapper.querySelector('.video-play-btn');
+                    const fsBtn = wrapper.querySelector('.video-fullscreen-btn');
+
+                    function showPlayBtn() {
+                        playBtn.classList.remove('hidden');
+                    }
+                    function hidePlayBtn() {
+                        playBtn.classList.add('fading');
+                        setTimeout(() => {
+                            playBtn.classList.add('hidden');
+                            playBtn.classList.remove('fading');
+                        }, 300);
+                    }
+
+                    function togglePlay() {
+                        if (video.paused) {
+                            video.play();
+                            hidePlayBtn();
+                        } else {
+                            video.pause();
+                            showPlayBtn();
+                        }
+                    }
+
+                    video.addEventListener('click', (e) => { e.stopPropagation(); togglePlay(); });
+                    playBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePlay(); });
+                    video.addEventListener('ended', showPlayBtn);
+
+                    // Native fullscreen
+                    fsBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (video.requestFullscreen) video.requestFullscreen();
+                        else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+                    });
+                });
+
+                // Vimeo: load SDK once, wire same play/pause/fullscreen logic via Vimeo.Player API
+                const vimeoWrappers = modalRight.querySelectorAll('.gallery-vimeo-wrapper');
+                if (vimeoWrappers.length > 0) {
+                    function initVimeoPlayers() {
+                        vimeoWrappers.forEach(wrapper => {
+                            const iframe = wrapper.querySelector('iframe');
+                            const playBtn = wrapper.querySelector('.video-play-btn');
+                            const fsBtn = wrapper.querySelector('.video-fullscreen-btn');
+                            const player = new Vimeo.Player(iframe);
+
+                            const shield = wrapper.querySelector('.vimeo-click-shield');
+
+                            function showPlayBtn() { playBtn.classList.remove('hidden'); }
+                            function hidePlayBtn() {
+                                playBtn.classList.add('fading');
+                                setTimeout(() => { playBtn.classList.add('hidden'); playBtn.classList.remove('fading'); }, 300);
+                            }
+                            function togglePlay() {
+                                player.getPaused().then(paused => {
+                                    if (paused) { player.play(); hidePlayBtn(); }
+                                    else { player.pause(); showPlayBtn(); }
+                                });
+                            }
+
+                            shield.addEventListener('click', (e) => { e.stopPropagation(); togglePlay(); });
+                            playBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePlay(); });
+                            player.on('ended', showPlayBtn);
+                            player.on('pause', showPlayBtn);
+
+                            fsBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                player.requestFullscreen().catch(() => {
+                                    if (iframe.requestFullscreen) iframe.requestFullscreen();
+                                });
+                            });
+                        });
+                    }
+
+                    if (window.Vimeo) {
+                        initVimeoPlayers();
+                    } else {
+                        const sdkScript = document.createElement('script');
+                        sdkScript.src = 'https://player.vimeo.com/api/player.js';
+                        sdkScript.onload = initVimeoPlayers;
+                        document.head.appendChild(sdkScript);
+                    }
+                }
             }
+
 
             // Show Modal
             projectModal.classList.add('active');
