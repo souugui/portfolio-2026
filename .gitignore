@@ -3,6 +3,9 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
+# Google Drive temp uploads
+.tmp.driveupload/
+
 # Logs
 *.log
 
@@ -17,6 +20,14 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Large video files (>100MB, exceeds GitHub limit)
+assets-updated/voepass-airplane-crash/previs_desk.mp4
+assets-updated/voepass-airplane-crash/voepass_mob.mp4
+assets-updated/voepass-airplane-crash/voepass_quase_desk.mp4
+assets-updated/voepass-airplane-crash/voepass_quase_mob.mp4
+assets-updated/voepass-airplane-crash/voepass_sem-marca-dagua_desk.mp4
+assets-updated/voepass-airplane-crash/voepass_sem-marca-dagua_mob.mp4
 
 # Editor directories and files
 .idea
