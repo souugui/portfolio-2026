@@ -251,13 +251,14 @@ const projects = [
         "my role": ["modeling", "lookdev", "animation"],
         description: "project developed to exercise modeling and lookdev",
         gallery: [
+            "assets-updated/ps3-wireless-headset/00.mp4",
+            "assets-updated/ps3-wireless-headset/01.m4v",
             "assets-updated/ps3-wireless-headset/01.webp",
             "assets-updated/ps3-wireless-headset/02.webp",
             "assets-updated/ps3-wireless-headset/03.webp",
             "assets-updated/ps3-wireless-headset/04.webp",
             "assets-updated/ps3-wireless-headset/05.webp",
-            "assets-updated/ps3-wireless-headset/01.m4v",
-            "assets-updated/ps3-wireless-headset/00.mp4"
+
         ]
     },
     /*{
