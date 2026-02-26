@@ -1110,7 +1110,7 @@ a {
 
 .meta-label {
     display: block;
-    font-size: 11px;
+    font-size: 14px;
     text-transform: lowercase;
     /* Lowercase labels */
     letter-spacing: 1px;
@@ -1121,7 +1121,7 @@ a {
 
 .meta-value {
     display: block;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 900;
     /* Black weight */
     color: #232323;
@@ -1133,7 +1133,7 @@ a {
 }
 
 .meta-credits .meta-label {
-    font-size: 13px;
+    font-size: 15px;
     /* Slightly larger */
     font-weight: 400;
     /* Regular weight */
@@ -1152,7 +1152,7 @@ a {
 }
 
 .credit-role {
-    font-size: 10px;
+    font-size: 15px;
     text-transform: lowercase;
     letter-spacing: 0.5px;
     color: #232323;
@@ -1160,7 +1160,7 @@ a {
 }
 
 .credit-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 900;
     /* Black weight */
     color: #232323;
@@ -1173,11 +1173,11 @@ a {
 }
 
 .project-modal-info .meta-label {
-    font-size: 11px;
+    font-size: 15px;
 }
 
 .info-text {
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.6;
     color: #232323;
     font-style: italic;
