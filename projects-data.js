@@ -21,7 +21,7 @@ const projects = [
             "assets-updated/beverage-can-viz/marienbad_06.webp"
         ]
     },
-    {
+    /*{
         title: "voepass airplane crash",
         client: "g1 news portal",
         year: 2025,
@@ -66,7 +66,7 @@ const projects = [
             "assets-updated/led-screen-scenarios/telao_categoria-furacao.mp4",
             "https://player.vimeo.com/video/1167728960"
         ]
-    },
+    },*/
     {
         title: "pedal",
         client: "personal project",
@@ -90,7 +90,7 @@ const projects = [
             "assets-updated/pedal/05_anim.mp4"
         ]
     },
-    {
+    /*{
         title: "rampage rally",
         client: "clint jones (aka pwnisher)",
         year: 2025,
@@ -107,7 +107,7 @@ const projects = [
             "assets-updated/rampage-rally/rampage-rally_souugui_redes.mp4",
             "assets-updated/rampage-rally/playblast1001-1144.mp4",
         ]
-    },
+    },*/
     {
         title: "beverage can animation",
         client: "truly",
@@ -124,7 +124,7 @@ const projects = [
             "assets-updated/beverage-can-animation/playblast-final.mp4"
         ]
     },
-    {
+    /*{
         title: "led screen r&d",
         client: "hora 1 - globo tv",
         year: 2024,
@@ -145,7 +145,7 @@ const projects = [
             "assets-updated/led-screen-r&d/render-limpo_ballon-dor.mp4",
             "assets-updated/led-screen-r&d/telao_ballon-dor.mp4"
         ]
-    },
+    },*/
     {
         title: "halftime show asset",
         client: "twisted tea",
@@ -184,7 +184,7 @@ const projects = [
             "assets-updated/air-diffuser/thumb.webp"
         ]
     },
-    {
+    /*{
         title: "weather explainer",
         client: "hora 1 - globo tv",
         year: 2024,
@@ -241,7 +241,7 @@ const projects = [
             "assets-updated/36-days-type/08.webp",
             "assets-updated/36-days-type/09.webp"
         ]
-    },
+    },*/
     {
         title: "ps3 wireless headset",
         client: "personal project",
@@ -260,7 +260,7 @@ const projects = [
             "assets-updated/ps3-wireless-headset/00.mp4"
         ]
     },
-    {
+    /*{
         title: "pineapple jar",
         client: "personal project",
         year: 2023,
@@ -312,7 +312,7 @@ const projects = [
             "assets-updated/causos/04.webp",
             "assets-updated/causos/05.webp"
         ]
-    }
+    }*/
 ];
 
 // Initialize the portfolio when DOM is ready (to ensure script.js has loaded and defined initPortfolio)
