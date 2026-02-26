@@ -1,12 +1,11 @@
 const projects = [
     {
-        title: "beverage can viz",
+        title: "marienbad",
         client: "giovanni flores",
         year: 2026,
         image: "assets-updated/beverage-can-viz/thumb.webp",
         category: "commercial",
         "my role": ["lookdev", "art direction"],
-        company: "marienbad",
         description: "giovanni contacted me to created some product viz for a fictional brand of beer idealized by him, Marienbad. the goal was to produce fun compositions to visualize how this brand would communicate.",
         credits: [
             { role: "illustration", name: "giovanni flores" },
