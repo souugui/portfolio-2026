@@ -13,12 +13,15 @@ const projects = [
             { role: "art direction", name: "giovanni flores" }
         ],
         gallery: [
-            "assets-updated/beverage-can-viz/marienbad_01.webp",
+            "assets-updated/beverage-can-viz/marienbad_01.mp4",
             "assets-updated/beverage-can-viz/marienbad_02.webp",
+            "assets-updated/beverage-can-viz/marienbad_02.mp4",
             "assets-updated/beverage-can-viz/marienbad_03.webp",
             "assets-updated/beverage-can-viz/marienbad_04.webp",
-            "assets-updated/beverage-can-viz/marienbad_05.webp",
-            "assets-updated/beverage-can-viz/marienbad_06.webp"
+            "assets-updated/beverage-can-viz/marienbad_05.png",
+            "assets-updated/beverage-can-viz/marienbad_05.mp4",
+            "assets-updated/beverage-can-viz/marienbad_06.mp4",
+            "assets-updated/beverage-can-viz/marienbad_07.png"
         ]
     },
     /*{
