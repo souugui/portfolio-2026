@@ -1,30 +1,5 @@
 const projects = [
     {
-        title: "beverage can viz",
-        client: "giovanni flores",
-        year: 2026,
-        image: "assets-updated/beverage-can-viz/thumb.webp",
-        category: "commercial",
-        "my role": ["lookdev", "art direction"],
-        company: "marienbad",
-        description: "giovanni contacted me to created some product viz for a fictional brand of beer idealized by him, Marienbad. the goal was to produce fun compositions to visualize how this brand would communicate.",
-        credits: [
-            { role: "illustration", name: "giovanni flores" },
-            { role: "art direction", name: "giovanni flores" }
-        ],
-        gallery: [
-            "assets-updated/beverage-can-viz/marienbad_01.mp4",
-            "assets-updated/beverage-can-viz/marienbad_02.webp",
-            "assets-updated/beverage-can-viz/marienbad_02.mp4",
-            "assets-updated/beverage-can-viz/marienbad_03.webp",
-            "assets-updated/beverage-can-viz/marienbad_04.webp",
-            "assets-updated/beverage-can-viz/marienbad_05.webp",
-            "assets-updated/beverage-can-viz/marienbad_05.mp4",
-            "assets-updated/beverage-can-viz/marienbad_06.mp4",
-            "assets-updated/beverage-can-viz/marienbad_07.webp"
-        ]
-    },
-    {
         title: "voepass airplane crash",
         client: "g1 news portal",
         year: 2025,
@@ -66,6 +41,31 @@ const projects = [
             "assets-updated/led-screen-scenarios/render-limpo_categoria-furacao.mp4",
             "assets-updated/led-screen-scenarios/telao_categoria-furacao.mp4",
             "https://player.vimeo.com/video/1167729004?h=cdf9d5f8b6"
+        ]
+    },
+    {
+        title: "beverage can viz",
+        client: "giovanni flores",
+        year: 2026,
+        image: "assets-updated/beverage-can-viz/thumb.webp",
+        category: "commercial",
+        "my role": ["lookdev", "art direction"],
+        company: "marienbad",
+        description: "giovanni contacted me to created some product viz for a fictional brand of beer idealized by him, Marienbad. the goal was to produce fun compositions to visualize how this brand would communicate.",
+        credits: [
+            { role: "illustration", name: "giovanni flores" },
+            { role: "art direction", name: "giovanni flores" }
+        ],
+        gallery: [
+            "assets-updated/beverage-can-viz/marienbad_01.mp4",
+            "assets-updated/beverage-can-viz/marienbad_02.webp",
+            "assets-updated/beverage-can-viz/marienbad_02.mp4",
+            "assets-updated/beverage-can-viz/marienbad_03.webp",
+            "assets-updated/beverage-can-viz/marienbad_04.webp",
+            "assets-updated/beverage-can-viz/marienbad_05.webp",
+            "assets-updated/beverage-can-viz/marienbad_05.mp4",
+            "assets-updated/beverage-can-viz/marienbad_06.mp4",
+            "assets-updated/beverage-can-viz/marienbad_07.webp"
         ]
     },
     {
