@@ -24,7 +24,7 @@ const projects = [
             "assets-updated/beverage-can-viz/marienbad_07.webp"
         ]
     },
-    /*{
+    {
         title: "voepass airplane crash",
         client: "g1 news portal",
         year: 2025,
@@ -39,10 +39,8 @@ const projects = [
             { role: "content research", name: "felipe turioni & lana torres" }
         ],
         gallery: [
-            "assets-updated/voepass-airplane-crash/voepass_sem-marca-dagua_desk.mp4",
-            "assets-updated/voepass-airplane-crash/voepass_quase_desk.mp4",
-            "assets-updated/voepass-airplane-crash/voepass_mob.mp4",
-            "assets-updated/voepass-airplane-crash/previs_desk.mp4",
+            "assets-updated/voepass-airplane-crash/mobile_step_by_step_aligned_tags.webm",
+            "assets-updated/voepass-airplane-crash/desk_sem_marca_dagua_finished.mp4",
             "assets-updated/voepass-airplane-crash/voepass-material.webp",
             "assets-updated/voepass-airplane-crash/voepass-esquema.webp"
         ]
@@ -55,7 +53,7 @@ const projects = [
         category: "commercial",
         "my role": ["layout", "animation", "compositing", "2d motion", "content research"],
         company: "Globo TV",
-        description: "environments for broadcasting that I had the opportunity to create for the new LED screen debuted by TV Globo on March 24, while working with the Hora 1 team. the goal on the first one was to create an immersive scene to illustrate middle east conflicts, so the host could introduce different stories about the topic, it was done within 3 hours from start to finish (with overnight rendering), using pre made assets, geometry nodes and compositing to unify the final look. the second one was created within two hours using geometry nodes in blender to create the destruction levels of the house's ceilling and help explain different grades of hurricanes when Hurricane Milton, a Category 3 storm, made landfall on Florida's west coast with winds reaching 120 mph",
+        description: "Created for the debut of TV Globo's new LED screen on March 24, focusing on fast-paced hard news demands:\n\nMiddle East Conflicts: An immersive scene to introduce different stories. Delivered in just 3 hours using pre-made assets, geometry nodes, and compositing to unify the final look.\n\nHurricane Milton: A visual explainer of hurricane categories showing varying levels of roof destruction. Created in only 2 hours using Blender's geometry nodes.",
         credits: [
             { role: "compositing", name: "tyson chiceri" }
         ],
@@ -67,9 +65,9 @@ const projects = [
             "assets-updated/led-screen-scenarios/viewport_categoria-furacao.mp4",
             "assets-updated/led-screen-scenarios/render-limpo_categoria-furacao.mp4",
             "assets-updated/led-screen-scenarios/telao_categoria-furacao.mp4",
-            "https://player.vimeo.com/video/1167728960"
+            "https://player.vimeo.com/video/1167729004?h=cdf9d5f8b6"
         ]
-    },*/
+    },
     {
         title: "pedal",
         client: "personal project",
