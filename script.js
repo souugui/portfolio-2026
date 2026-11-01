@@ -11,116 +11,299 @@ document.addEventListener('DOMContentLoaded', () => {
         const projects = projectsData;
 
 
-        const gridContainer = document.getElementById('project-grid');
+        // Custom White Square Cursor with Hard Cyan Drop Shadow
+        const customCursor = document.getElementById('custom-cursor');
+        if (customCursor) {
+            window.addEventListener('pointermove', (e) => {
+                customCursor.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+            }, { passive: true });
+            window.addEventListener('pointerdown', () => customCursor.classList.add('is-pressed'));
+            window.addEventListener('pointerup', () => customCursor.classList.remove('is-pressed'));
+            window.addEventListener('pointercancel', () => customCursor.classList.remove('is-pressed'));
+            window.addEventListener('blur', () => customCursor.classList.remove('is-pressed'));
+        }
 
-        // Render Projects Function
+        const gridContainer = document.getElementById('project-grid');
+        const carouselViewport = document.getElementById('carousel-viewport');
+        let setLength = 0;
+
+        // Split multi-word titles into balanced lines (e.g., "HALFTIME SHOW ASSET" -> ["HALFTIME", "SHOW ASSET"])
+        function splitTitleIntoLines(title) {
+            const words = title.trim().toUpperCase().split(/\s+/);
+            if (words.length <= 1) return words;
+            if (words.length === 2) {
+                if (words[0].length <= 3 || words[1].length <= 3) {
+                    return [words.join(' ')];
+                }
+                return [words[0], words[1]];
+            }
+
+            let bestSplit = 1;
+            let bestDiff = Infinity;
+            for (let i = 1; i < words.length; i++) {
+                const line1 = words.slice(0, i).join(' ');
+                const line2 = words.slice(i).join(' ');
+                const diff = Math.abs(line1.length - line2.length);
+                if (diff < bestDiff) {
+                    bestDiff = diff;
+                    bestSplit = i;
+                }
+            }
+            return [
+                words.slice(0, bestSplit).join(' '),
+                words.slice(bestSplit).join(' ')
+            ];
+        }
+
+        // Scale EVERY line of the project title independently so each line fills 100% of the thumbnail width
+        function fitCardOverlays() {
+            if (!gridContainer) return;
+            gridContainer.querySelectorAll('.carousel-card').forEach(card => {
+                const cardW = card.clientWidth;
+                const cardH = card.clientHeight;
+                if (!cardW || !cardH) return;
+
+                const innerW = cardW - 12; // 6px left + 6px right padding
+                if (innerW <= 0) return;
+
+                card.querySelectorAll('.overlay-title-line').forEach(lineEl => {
+                    lineEl.style.fontSize = '60px';
+                    const naturalW = lineEl.scrollWidth;
+                    if (naturalW > 0) {
+                        const fittedSize = 60 * (innerW / naturalW);
+                        lineEl.style.fontSize = `${fittedSize.toFixed(2)}px`;
+                    }
+                });
+            });
+        }
+
+        // Render Projects into Seamless Infinite Horizontal Carousel
         function renderProjects(filter = 'all') {
             if (!gridContainer) return;
-
-            // Clear current grid
-            gridContainer.innerHTML = '';
 
             const filteredProjects = projects.filter(project => {
                 if (filter === 'all') return true;
                 return project.category === filter;
             });
 
-            filteredProjects.forEach((project, index) => {
-                // Find the original index in the full projects array
+            // Repeat filteredProjects 6x so one complete cycle is always divisible by BOTH 3 (stagger) and 2 (cyan/orange alternation)
+            const oneCycle = [
+                ...filteredProjects, ...filteredProjects, ...filteredProjects,
+                ...filteredProjects, ...filteredProjects, ...filteredProjects
+            ];
+            setLength = oneCycle.length;
+
+            // Duplicate oneCycle twice for seamless infinite wrapping
+            const allItems = [...oneCycle, ...oneCycle];
+
+            gridContainer.innerHTML = allItems.map((project, idx) => {
                 const originalIndex = projects.findIndex(p => p.title === project.title);
-
-                const article = document.createElement('article');
-                article.className = 'project-tile';
-                article.tabIndex = 0;
-                article.setAttribute('data-index', originalIndex);
-
-                // Priority loading for first few items
-                const loadingAttr = index < 4 ? '' : 'loading="lazy"';
-
                 const isVideo = /\.(mp4|mov|mkv|webm|m4v)$/i.test(project.image);
-                // Encode each path segment individually so spaces and special chars work
                 const mediaSrc = project.image.split('/').map(encodeURIComponent).join('/');
-
                 const mediaHTML = isVideo
                     ? `<video src="${mediaSrc}" autoplay muted loop playsinline></video>`
-                    : `<img src="${mediaSrc}" alt="${project.title} - ${project.client}" ${loadingAttr}>`;
+                    : `<img src="${mediaSrc}" alt="${project.title} - ${project.client}" draggable="false">`;
+                const colorVariant = idx % 2 === 0 ? 'cyan' : 'orange';
+                const clientLabel = project.category === 'personal' ? 'personal project' : project.client;
+                const titleLinesHTML = splitTitleIntoLines(project.title)
+                    .map(line => `<span class="overlay-title-line">${line}</span>`)
+                    .join('');
 
-                article.innerHTML = `
-                <div class="image-wrapper">
-                    ${mediaHTML}
-                    <div class="tile-overlay">
-                        <div class="overlay-content">
-                            <h3>${project.title}</h3>
-                            <span class="client-name">${project.client}</span>
-                            <span class="project-year">${project.year}</span>
+                return `
+                    <article class="carousel-card" tabindex="0" data-index="${originalIndex}" data-stagger="${idx % 3}" data-color-variant="${colorVariant}">
+                        ${mediaHTML}
+                        <div class="tile-overlay">
+                            <span class="overlay-year">${project.year}</span>
+                            <div class="overlay-bottom">
+                                <span class="overlay-client">${clientLabel}</span>
+                                <div class="overlay-title">${titleLinesHTML}</div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            `;
-                // Add Fade In Animation for filter switch
-                article.style.animation = `fadeHero 0.5s ease-out forwards ${index * 0.05}s`;
-                article.style.opacity = '0'; // Start hidden for animation
+                    </article>
+                `;
+            }).join('');
 
-                // Click handler to open project modal
-                article.addEventListener('click', () => {
-                    openProjectModal(originalIndex);
-                });
-
-                gridContainer.appendChild(article);
+            // Re-fit overlay typography as media and fonts finish loading
+            gridContainer.querySelectorAll('img').forEach(img => {
+                if (img.complete) {
+                    fitCardOverlays();
+                } else {
+                    img.addEventListener('load', fitCardOverlays, { once: true });
+                }
+            });
+            gridContainer.querySelectorAll('video').forEach(vid => {
+                vid.addEventListener('loadedmetadata', fitCardOverlays, { once: true });
+            });
+            requestAnimationFrame(() => {
+                fitCardOverlays();
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(fitCardOverlays);
+                }
             });
         }
 
         // Initial Render
         renderProjects('all');
+        window.addEventListener('resize', fitCardOverlays);
 
-        // ── Grid Masonry: calculate row spans after images load ──────────
+        // Infinite Auto-Scroll + Click & Drag + Shift/Trackpad Wheel + 4-Corner Homography Skew
+        let isDown = false;
+        let prevX = 0;
+        let downX = 0;
+        let downY = 0;
+        let maxDragDist = 0;
+        let clickedCard = null;
+        let hasCapture = false;
+        let targetX = 0;
+        let currentX = 0;
+        let velocity = 0;
+        let smoothShear = 0;
+        const autoSpeed = 0.9; // Right-to-left drift speed
 
-
-        function applyMasonrySpans() {
-            const ITEM_GAP = 16;
-            const tiles = gridContainer.querySelectorAll('.project-tile');
-            tiles.forEach(tile => {
-                // Reset so we get the natural content height
-                tile.style.gridRowEnd = '';
-                const height = tile.getBoundingClientRect().height;
-                // span = height + gap → places next item exactly GAP px below
-                tile.style.gridRowEnd = `span ${Math.ceil(height) + ITEM_GAP}`;
+        if (carouselViewport && gridContainer) {
+            carouselViewport.addEventListener('pointerdown', (e) => {
+                if (e.button !== undefined && e.button !== 0) return;
+                isDown = true;
+                hasCapture = false;
+                prevX = e.clientX;
+                downX = e.clientX;
+                downY = e.clientY;
+                maxDragDist = 0;
+                clickedCard = e.target.closest('.carousel-card');
+                velocity = 0;
             });
-        }
 
-        function waitForImagesAndApply() {
-            const imgs = [...gridContainer.querySelectorAll('img')];
-            const videos = [...gridContainer.querySelectorAll('video')];
-            const media = [...imgs, ...videos];
-            let loaded = 0;
-            if (media.length === 0) { applyMasonrySpans(); return; }
+            carouselViewport.addEventListener('pointermove', (e) => {
+                if (!isDown) return;
+                const dx = e.clientX - prevX;
+                prevX = e.clientX;
+                const dist = Math.hypot(e.clientX - downX, e.clientY - downY);
+                if (dist > maxDragDist) maxDragDist = dist;
 
-            function onLoaded() {
-                loaded++;
-                if (loaded === media.length) applyMasonrySpans();
+                if (maxDragDist > 5 && !hasCapture) {
+                    try {
+                        carouselViewport.setPointerCapture(e.pointerId);
+                        hasCapture = true;
+                    } catch (err) {}
+                }
+
+                targetX += dx * 1.35;
+                velocity = dx;
+            });
+
+            carouselViewport.addEventListener('pointerup', (e) => {
+                if (!isDown) return;
+                isDown = false;
+                if (hasCapture) {
+                    try { carouselViewport.releasePointerCapture(e.pointerId); } catch (err) {}
+                    hasCapture = false;
+                }
+                if (maxDragDist <= 6 && clickedCard) {
+                    const idx = Number(clickedCard.getAttribute('data-index'));
+                    if (!Number.isNaN(idx)) {
+                        openProjectModal(idx);
+                    }
+                }
+                clickedCard = null;
+            });
+
+            carouselViewport.addEventListener('pointercancel', () => {
+                isDown = false;
+                hasCapture = false;
+                clickedCard = null;
+            });
+
+            // Horizontal Trackpad Swipe (deltaX) + Shift & Scroll Wheel (shiftKey + deltaY)
+            carouselViewport.addEventListener('wheel', (e) => {
+                const isHorizontalTrackpad = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+                const isShiftWheel = e.shiftKey && e.deltaY !== 0;
+
+                if (isHorizontalTrackpad || isShiftWheel) {
+                    e.preventDefault();
+                    const scrollDelta = isHorizontalTrackpad && e.deltaX !== 0 ? e.deltaX : e.deltaY;
+                    targetX -= scrollDelta * 1.25;
+                    velocity = -scrollDelta * 0.35;
+                }
+            }, { passive: false });
+
+            function getOneSetWidth() {
+                const cards = gridContainer.querySelectorAll('.carousel-card');
+                if (cards.length <= setLength || setLength === 0) return 0;
+                return cards[setLength].offsetLeft - cards[0].offsetLeft;
             }
 
-            imgs.forEach(img => {
-                if (img.complete) { onLoaded(); }
-                else {
-                    img.addEventListener('load', onLoaded);
-                    img.addEventListener('error', onLoaded);
+            function tickCarousel() {
+                const oneSetWidth = getOneSetWidth();
+                if (!isDown) {
+                    targetX -= autoSpeed;
+                    targetX += velocity;
+                    velocity *= 0.92;
                 }
-            });
+                if (oneSetWidth > 0) {
+                    while (targetX <= -oneSetWidth) {
+                        targetX += oneSetWidth;
+                        currentX += oneSetWidth;
+                    }
+                    while (targetX > 0) {
+                        targetX -= oneSetWidth;
+                        currentX -= oneSetWidth;
+                    }
+                }
+                const prevCurrent = currentX;
+                currentX += (targetX - currentX) * 0.1;
+                const delta = currentX - prevCurrent;
 
-            videos.forEach(video => {
-                if (video.readyState >= 1) { onLoaded(); } // HAVE_METADATA
-                else {
-                    video.addEventListener('loadedmetadata', onLoaded);
-                    video.addEventListener('error', onLoaded);
+                const userVelocity = -(delta + autoSpeed);
+                const targetShear = Math.max(-0.20, Math.min(0.20, userVelocity * 0.0085));
+                smoothShear += (targetShear - smoothShear) * 0.18;
+
+                gridContainer.style.transform = `translate3d(${currentX.toFixed(2)}px, 0, 0)`;
+
+                const cards = gridContainer.querySelectorAll('.carousel-card');
+                if (Math.abs(smoothShear) > 0.002) {
+                    const vw = window.innerWidth;
+                    const updates = [];
+                    cards.forEach(card => {
+                        const approxLeft = card.offsetLeft + currentX;
+                        const W = card.offsetWidth;
+                        if (approxLeft + W < -400 || approxLeft > vw + 400) return;
+                        const H = card.offsetHeight;
+                        if (!W || !H) return;
+
+                        const taper = H * Math.abs(smoothShear) * 0.9;
+                        let dxR, dxL;
+                        if (smoothShear >= 0) {
+                            dxR = H * smoothShear;
+                            dxL = dxR + taper;
+                        } else {
+                            dxL = H * smoothShear;
+                            dxR = dxL - taper;
+                        }
+
+                        const k = W / Math.max(40, W - (dxL - dxR));
+                        const m10 = (-k * dxL) / H;
+                        const m13 = (1 - k) / H;
+                        const m30 = k * dxL;
+                        const m33 = k;
+
+                        updates.push({
+                            card,
+                            matrix: `matrix3d(1,0,0,0, ${m10.toFixed(6)},1,0,${m13.toFixed(6)}, 0,0,1,0, ${m30.toFixed(2)},0,0,${m33.toFixed(5)})`
+                        });
+                    });
+                    for (let i = 0; i < updates.length; i++) {
+                        updates[i].card.style.transform = updates[i].matrix;
+                    }
+                } else {
+                    cards.forEach(card => {
+                        if (card.style.transform) card.style.transform = '';
+                    });
                 }
-            });
+
+                requestAnimationFrame(tickCarousel);
+            }
+            requestAnimationFrame(tickCarousel);
         }
-
-        waitForImagesAndApply();
-
-        // Re-apply on resize (column count changes between breakpoints)
-        window.addEventListener('resize', applyMasonrySpans);
 
         // Filter Logic
         const filterButtons = document.querySelectorAll('.filter-btn');
@@ -128,19 +311,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         filterButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                // Remove active class from all
                 filterButtons.forEach(b => b.classList.remove('active'));
-                // Add active to clicked
                 btn.classList.add('active');
 
-                // Render
                 const filterValue = btn.getAttribute('data-filter');
+                targetX = 0;
+                currentX = 0;
+                velocity = 0;
                 renderProjects(filterValue);
-                waitForImagesAndApply();
 
-                // User Req: Mobile - Scroll to top of section when filtering
                 if (window.innerWidth < 1200 && worksSection) {
-                    const offset = 100; // Little buffer
+                    const offset = 100;
                     const top = worksSection.getBoundingClientRect().top + window.scrollY - offset;
                     window.scrollTo({ top: top, behavior: 'smooth' });
                 }
