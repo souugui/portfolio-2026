@@ -361,7 +361,7 @@ a {
     line-height: 1.05;
     text-align: center;
     text-transform: lowercase;
-    padding: 0.45em 0.7em 0.35em;
+    padding: 0.5em 0.7em;
     border-radius: 0;
     box-shadow: none;
     opacity: 0;
@@ -370,19 +370,16 @@ a {
     transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, color 0.2s ease;
 }
 
-.skip-works-btn .skip-line-light {
-    font-weight: 300;
-}
-
+.skip-works-btn .skip-line-light,
 .skip-works-btn .skip-line-bold {
-    font-weight: 900;
+    display: none;
 }
 
 .skip-works-btn .skip-line-arrow {
     font-weight: 900;
-    font-size: 1.15em;
+    font-size: 1.25em;
     line-height: 1;
-    margin-top: 0.1em;
+    margin-top: 0;
 }
 
 .skip-works-btn.visible {
