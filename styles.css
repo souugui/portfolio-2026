@@ -370,16 +370,18 @@ a {
     transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, color 0.2s ease;
 }
 
-.skip-works-btn .skip-line-light,
+.skip-works-btn .skip-line-light {
+    font-weight: 300;
+}
+
 .skip-works-btn .skip-line-bold {
-    display: none;
+    font-weight: 900;
 }
 
 .skip-works-btn .skip-line-arrow {
     font-weight: 900;
     font-size: 1.25em;
     line-height: 1;
-    margin-top: 0;
 }
 
 .skip-works-btn.visible {
