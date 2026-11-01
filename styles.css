@@ -1,9 +1,13 @@
 /* CSS Variables & Reset */
 :root {
-    --bg-color: #222222;
+    --bg-color: #1E1E1E;
     --text-color: #afafaf;
     --text-light: #bfbfbf;
     --accent-color: #ffffff;
+    --cyan-color: #4CFFEE;
+    --cyan-active: #4EFFED;
+    --orange-color: #FF6F00;
+    --dark-ink: #1E1E1E;
     --sidebar-width: 200px;
     --gutter: 24px;
 
@@ -44,19 +48,126 @@ a {
     transition: color 0.2s ease;
 }
 
-/* Header Removed */
+/* ============================================
+   OPENING SCROLLYTELLING SECTION (Stages 1-3)
+   ============================================ */
 
-
-/* Hero Section */
-.hero-section {
+.opening-scroll-container {
     position: relative;
     width: 100%;
-    /* Maintain 16:9 Aspect Ratio to match video */
-    aspect-ratio: 16 / 9;
+    height: 470vh;
+    background-color: transparent;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.opening-sticky-viewport {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
     overflow: hidden;
+    background-color: transparent;
+}
+
+/* Stage 1A: Cyan Layer + Giant souugui Wordmark */
+.opening-cyan-layer {
+    position: absolute;
+    inset: 0;
+    background-color: var(--cyan-color);
+    z-index: 2;
+    will-change: transform;
+}
+
+.souugui-wordmark-wrap {
+    position: absolute;
+    top: 0;
+    left: -0.35vw;
+    width: 100.7vw;
+    z-index: 5;
+    will-change: transform;
+    /* Starting state: horizontally centered, 1% further down so it cuts just a little of the u letters */
+    transform: translate3d(0, calc(101vh - 24.5vw), 0);
+}
+
+.souugui-wordmark-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+/* Stage 1B: Orange Tagline Strip (behind souugui wordmark so g descender overlaps on top) */
+.opening-orange-tagline {
+    position: absolute;
+    /* 24.35vw (bottom straight part of u in SVG) - 6.5vw (ending Y of souugui) = 17.85vw */
+    top: 17.85vw;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 17.85vw + 2px);
+    background-color: var(--orange-color);
+    z-index: 4;
+    will-change: transform;
+    /* Starts below the viewport */
+    transform: translate3d(0, 100vh, 0);
+}
+
+.opening-tagline-text {
+    position: absolute;
+    top: 3.1vw;
+    left: 15.3vw;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1rem, 1.875vw, 2rem);
+    line-height: 1.2;
+    color: #ffffff;
+    white-space: nowrap;
+    margin: 0;
+    will-change: clip-path;
+    clip-path: inset(0 100% 0 0);
+}
+
+.opening-tagline-text .tagline-bold-italic {
+    font-weight: 900;
+    font-style: italic;
+}
+
+.opening-tagline-text .tagline-light {
+    font-weight: 300;
+}
+
+.opening-tagline-text .tagline-highlight {
+    display: inline-block;
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 900;
+    font-style: normal;
+    padding: 0.05em 0.28em 0.12em;
+    margin-left: 0.12em;
+}
+
+/* Stage 2 & 3: Showreel Video + Statement Banner */
+.opening-video-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 200vh;
+    z-index: 6;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    will-change: transform;
+    /* Starts completely below viewport */
+    transform: translate3d(0, 100vh, 0);
+}
+
+.opening-video-frame {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: #000;
+    border-top: 6px solid var(--orange-color);
 }
 
 .video-background {
@@ -83,10 +194,8 @@ a {
 .vimeo-wrapper iframe {
     width: 100vw;
     height: 56.25vw;
-    /* Given a 16:9 aspect ratio, 9/16*100 = 56.25 */
     min-height: 100vh;
     min-width: 177.77vh;
-    /* Given a 16:9 aspect ratio, 16/9*100 = 177.77 */
     position: absolute;
     top: 50%;
     left: 50%;
@@ -102,14 +211,64 @@ a {
     display: none;
 }
 
-/* Mobile Breakpoint: Switch Videos */
-@media (max-width: 768px) {
-    .hero-section {
-        aspect-ratio: 1 / 1;
-        height: auto;
-        min-height: 0;
-    }
+/* Stage 3: Bottom Orange Statement Banner */
+.opening-statement-banner {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    flex-shrink: 0;
+    background-color: var(--orange-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+}
 
+.statement-wipe-box {
+    position: relative;
+    display: inline-grid;
+    align-items: center;
+}
+
+.statement-phrase {
+    grid-area: 1 / 1;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.1rem, 2.5vw, 2.25rem);
+    line-height: 1.25;
+    text-align: left;
+    white-space: nowrap;
+    will-change: clip-path;
+}
+
+.statement-phrase .phrase-light {
+    font-weight: 300;
+}
+
+.statement-phrase .phrase-black {
+    font-weight: 900;
+}
+
+.statement-phrase.phrase-white {
+    color: #ffffff;
+    clip-path: inset(0 0 0 0%);
+}
+
+.statement-phrase.phrase-dark {
+    color: #000000;
+    clip-path: inset(0 100% 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .souugui-wordmark-wrap,
+    .opening-orange-tagline,
+    .opening-video-stage {
+        transition: none !important;
+    }
+}
+
+/* Mobile Breakpoint: Switch Videos & Scale Opening Typography */
+@media (max-width: 768px) {
     .vimeo-wrapper.desktop {
         display: none;
     }
@@ -118,50 +277,35 @@ a {
         display: block;
     }
 
-    /* Mobile often has different Aspect Ratio (Square 1:1 requested) */
     .vimeo-wrapper.mobile iframe {
         width: 100%;
         height: 100%;
-        min-width: 0;
-        /* Reset inherited desktop styles */
-        min-height: 0;
-        /* Reset inherited desktop styles */
+        min-width: 100vw;
+        min-height: 100vh;
         position: absolute;
-        top: 0;
-        left: 0;
-        transform: none;
-        /* Reset transform */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 
-    /* iPhone SE / Mobile Typography & Spacing Fixes */
-    .hero-title {
-        font-size: 1.75rem;
-        line-height: 1.1;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
+    .opening-tagline-text {
+        left: 5vw;
+        font-size: clamp(0.7rem, 3.3vw, 1.1rem);
     }
 
-    .hero-tagline {
-        font-size: 0.6rem;
-        line-height: 1.3;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
+    .opening-statement-banner {
+        padding: 0 12px;
     }
 
-    .scroll-indicator {
-        bottom: 5px;
-        /* Keep base margin centering (left:0; right:0; margin:auto) */
+    .statement-phrase {
+        font-size: clamp(0.72rem, 3.6vw, 1.35rem);
     }
 
-    .scroll-indicator .line {
-        height: 23px;
-    }
-
-    .tablet-break {
-        display: none;
-        /* Hide tablet breaks on mobile */
+    .skip-works-btn {
+        top: 18.8vw;
+        right: 2.5vw;
+        font-size: clamp(0.55rem, 2.1vw, 0.75rem);
+        padding: 0.28em 0.5em 0.22em;
     }
 }
 
@@ -184,110 +328,6 @@ a {
         bottom: 40px;
         left: 40px;
     }
-
-    .site-logo {
-        /* Increase by 20% */
-        width: 14.4vw;
-        /* Base 12vw * 1.2 = 14.4vw */
-        max-width: none;
-    }
-
-    .hero-tagline .tablet-break {
-        display: block;
-        /* Force the 3-line break */
-    }
-
-    .scroll-indicator {
-        bottom: 20px;
-        /* Move down but keep base margin centering */
-    }
-
-    .scroll-indicator .line {
-        height: 40px;
-        /* Base 60 -> -35% = ~39px */
-    }
-}
-
-/* Mobile Logo Specifics: Decrease 50%, Move Up 20% */
-@media (max-width: 768px) {
-    .site-logo {
-        width: 60px;
-        /* 50% of 120px */
-        top: 25px;
-        /* ~20% up from 32px (32 * 0.8 = ~25.6) */
-    }
-}
-
-/* Fallback/Overlay */
-.video-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    /* 30% opacity */
-    z-index: 2;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 3;
-    text-align: center;
-    opacity: 0;
-    animation: fadeHero 800ms ease-out forwards 200ms;
-}
-
-.hero-title {
-    font-size: 4rem;
-    font-family: 'Bitter', serif;
-    font-weight: 700;
-    font-style: italic;
-    color: #ff6f00;
-    /*letter-spacing: -0.02rem;*/
-    margin-bottom: 4px;
-}
-
-.hero-tagline {
-    font-size: 1.25rem;
-    font-weight: 300;
-    color: white;
-    opacity: 0.9;
-}
-
-.scroll-indicator {
-    position: absolute;
-    bottom: 40px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    width: max-content;
-    z-index: 10;
-    /* Safe z-index */
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    animation: fadeScrollIndicator 800ms ease-out forwards 1000ms;
-    cursor: pointer;
-    /* Indication it's clickable */
-    text-decoration: none;
-    /* No underline */
-}
-
-.scroll-indicator span {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
-
-.scroll-indicator .line {
-    width: 1px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.4);
 }
 
 @keyframes fadeHero {
@@ -302,103 +342,99 @@ a {
     }
 }
 
-/* Separate animation for scroll indicator - no transform to avoid centering conflicts */
-@keyframes fadeScrollIndicator {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-/* Site Logo */
-.site-logo {
+/* Jump to Works Button (Right side below the 'i' of souugui) */
+.skip-works-btn {
     position: fixed;
-    top: 32px;
-
-    /* Mobile: Center Logo */
-    left: 50%;
-    transform: translateX(-50%);
-
-    /* Matched to Avatar Base Size */
-    width: 120px;
-    /* Wider for text logo */
-    height: auto;
-    z-index: 200;
-    opacity: 0.7;
-    /* Full opacity for text */
-    display: flex;
-    /* Center image */
+    /* Aligned horizontally under the 'i' stem on the right edge, and vertically in the orange strip below 'i' */
+    top: 20.95vw;
+    right: 2.2vw;
+    z-index: 95;
+    display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    /* Align left */
-    cursor: pointer;
-    text-decoration: none;
-    transition: opacity 0.3s ease;
+    justify-content: center;
+    gap: 0.1em;
+    background-color: #ffffff;
+    color: var(--dark-ink);
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(0.85rem, 1.25vw, 1.25rem);
+    line-height: 1.05;
+    text-align: center;
+    text-transform: lowercase;
+    padding: 0.45em 0.7em 0.35em;
+    border-radius: 0;
+    box-shadow: none;
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Hide logo on mobile when project modal is open */
-@media (max-width: 767px) {
-    body.project-modal-open .site-logo {
-        opacity: 0;
-        pointer-events: none;
-    }
+.skip-works-btn .skip-line-light {
+    font-weight: 300;
 }
 
-.site-logo:hover {
+.skip-works-btn .skip-line-bold {
+    font-weight: 900;
+}
+
+.skip-works-btn .skip-line-arrow {
+    font-weight: 900;
+    font-size: 1.15em;
+    line-height: 1;
+    margin-top: 0.1em;
+}
+
+.skip-works-btn.visible {
     opacity: 1;
+    transform: translate3d(0, 0, 0);
+    pointer-events: auto;
 }
 
-.site-logo img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain;
-    /* Fix for "broken" image */
+.skip-works-btn:hover {
+    background-color: var(--cyan-active);
+    color: var(--dark-ink);
 }
 
 /* Profile Avatar Trigger */
-/* Filter Capsule */
+/* Filter Capsule - Updated Visuals (Sharp Rectangular Bar, Inter Light/Black) */
 .filter-capsule {
     position: fixed;
     z-index: 90;
     display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px;
-    /* User req: More transparent (from 0.6 to 0.4) */
-    background: rgba(30, 30, 30, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    align-items: stretch;
+    gap: 0;
+    padding: 0;
+    background: #ffffff;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .filter-btn {
-    background: transparent;
+    background: #ffffff;
     border: none;
-    color: var(--text-color);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
+    color: var(--orange-color);
+    padding: 6px 16px;
+    border-radius: 0;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 300;
+    text-transform: lowercase;
     cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-family: 'Inter', sans-serif;
 }
 
 .filter-btn:hover {
-    color: white;
+    color: var(--dark-ink);
 }
 
 .filter-btn.active {
-    background-color: #ff6f00;
-    color: white;
-    font-weight: 600;
+    background-color: var(--cyan-active);
+    color: var(--dark-ink);
+    font-weight: 900;
 }
 
 /* Mobile Layout Default */
@@ -412,6 +448,16 @@ a {
     /* User req: Smaller on mobile */
     transform: scale(0.9);
     transform-origin: bottom right;
+}
+
+/* Tablet Refinements (768px - 1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .filter-capsule {
+        transform: scale(1.2);
+        transform-origin: bottom right;
+        bottom: 40px;
+        right: 40px;
+    }
 }
 
 /* Profile Avatar Wrapper */
@@ -505,20 +551,17 @@ a {
 /* Desktop: Avatar Position & Size correction */
 @media (min-width: 1200px) {
 
-    /* Filter Desktop Positioning */
+    /* Filter Desktop Positioning: sits in document flow between WORKS and grid, then sticks at top: 32px */
     .filter-capsule {
+        position: sticky;
+        top: 32px;
         bottom: auto;
         right: auto;
-        top: 32px;
-        left: 50%;
-        transform: translateX(-50%) translateY(-100px);
-        /* Start hidden (slide up) */
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .filter-capsule.visible {
-        transform: translateX(-50%) translateY(0);
+        left: auto;
+        width: fit-content;
+        /* Exact distance from filter to grid (38px at 1280px = 3vw) */
+        margin: 0 auto 3vw auto;
+        transform: none;
         opacity: 1;
         pointer-events: auto;
     }
@@ -631,7 +674,7 @@ a {
     background-color: white;
     width: 90%;
     max-width: 400px;
-    border-radius: 12px;
+    border-radius: 0;
     padding: 40px;
     position: relative;
     transform: translateY(20px);
@@ -650,9 +693,9 @@ a {
     right: 16px;
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 28.8px;
     cursor: pointer;
-    color: #666;
+    color: #232323;
 }
 
 .modal-avatar {
@@ -690,7 +733,7 @@ a {
     gap: 8px;
     background-color: transparent;
     border: 1px solid #e0e0e0;
-    border-radius: 24px;
+    border-radius: 0;
     padding: 10px 20px;
     font-family: inherit;
     font-size: 14px;
@@ -786,11 +829,40 @@ a {
 .main-content {
     position: relative;
     background-color: var(--bg-color);
-    padding-top: 48px;
-    /* Separation from hero */
+    /* Overlaps the final 20vh of #hero so the rising orange banner reveals WORKS in the bottom 20% */
+    margin-top: -20vh;
+    padding-top: 0;
     padding-bottom: 120px;
     min-height: 100vh;
     z-index: 10;
+    /* Use overflow-x: clip so position: sticky on #project-filter works natively without flickering */
+    overflow-x: clip;
+}
+
+/* Works Section Header (Erica One) */
+.works-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Exact distance from WORKS title to filter (67px at 1280px = 5.2vw) */
+    margin-bottom: 5.2vw;
+    overflow: hidden;
+    will-change: transform;
+}
+
+.works-title {
+    font-family: 'Erica One', cursive, sans-serif;
+    font-weight: 400;
+    font-size: clamp(5.5rem, 17.5vw, 225px);
+    line-height: 0.72;
+    color: var(--cyan-active);
+    text-transform: uppercase;
+    letter-spacing: 0;
+    margin: 0;
+    /* Top-align uppercase glyphs to the top edge of the section */
+    transform: translateY(-0.08em);
+    user-select: none;
 }
 
 /* Grid Masonry Layout (row-first, variable height) */
@@ -817,7 +889,8 @@ a {
 @media (min-width: 1200px) {
     .grid-container {
         grid-template-columns: repeat(3, 1fr);
-        padding: 24px;
+        margin: 0 auto 5% auto;
+        padding: 0 24px 24px 24px;
     }
 }
 
@@ -837,8 +910,8 @@ a {
     /* Grid masonry: row span is set dynamically via JS */
     align-self: start;
 
-    /* Rounded Corners */
-    border-radius: 4px;
+    /* Sharp Corners */
+    border-radius: 0;
     overflow: hidden;
 }
 
@@ -920,7 +993,7 @@ a {
 /* Footer */
 .site-footer {
     padding: 64px;
-    background-color: #222;
+    background-color: var(--bg-color);
     text-align: center;
     color: var(--text-light);
     font-size: 14px;
@@ -993,7 +1066,7 @@ a {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 150;
+    z-index: 220;
     display: flex;
     align-items: flex-end;
     /* Modal touches bottom */
@@ -1011,14 +1084,14 @@ a {
 .project-modal-content {
     position: relative;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 95%;
     max-width: 1500px;
     height: 85vh;
     background: #f5f5f5;
     /* Match gallery background */
-    border-radius: 12px 12px 0 0;
-    /* Rounded top only */
+    border-radius: 0;
+    /* Sharp rectangular corners */
     overflow: hidden;
     transform: translateY(20px);
     transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -1030,41 +1103,60 @@ a {
     transform: translateY(0);
 }
 
-/* Close Button - now a sibling of modal-content */
+.project-modal-body {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Close Button - Tall dark rectangular tab flush with the top edge of the modal */
 .project-modal-close {
     position: absolute;
-    /* Calculate position relative to modal-content on desktop */
-    /* Modal-content is 95% width, max 1500px, centered */
-    top: calc(15vh/2 + 20px);
-    /* 85vh modal + some offset for top */
-    right: calc((100% - min(95%, 1500px)) / 2 + 20px);
-    width: 32px;
-    height: 32px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    background: white;
-    font-size: 24px;
+    /* Flush with top edge of the 85vh bottom-aligned modal */
+    top: 15vh;
+    right: calc((100% - min(95%, 1500px)) / 2 + 16px);
+    width: 48px;
+    height: 76px;
+    border: none;
+    border-radius: 0;
+    background: #232323;
+    font-size: 40px;
+    font-weight: 300;
+    line-height: 1;
     cursor: pointer;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    transition: all 0.2s ease;
-    color: #232323;
-    z-index: 160;
+    padding-bottom: 10px;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    color: #ffffff;
+    z-index: 230;
 }
 
 .project-modal-close:hover {
-    background: #eee;
-    border-color: rgba(0, 0, 0, 0.2);
+    background: #000000;
+}
+
+/* Title Header Row */
+.project-modal-title {
+    font-size: 32px;
+    font-weight: 900;
+    /* Black weight */
+    color: #232323;
+    margin: 0;
+    padding: 36px 88px 28px 40px;
+    flex-shrink: 0;
+    line-height: 1.2;
+    text-transform: uppercase;
 }
 
 /* Left Column - Fixed Info */
 .modal-left {
     width: 38%;
-    min-width: 320px;
-    padding: 40px;
-    padding-top: 80px;
-    /* Space for close button */
+    min-width: 300px;
+    padding: 0 40px 40px 40px;
     background: #f5f5f5;
     overflow-y: auto;
     display: flex;
@@ -1077,17 +1169,6 @@ a {
 
 .modal-left::-webkit-scrollbar {
     display: none;
-}
-
-/* Title */
-.project-modal-title {
-    font-size: 32px;
-    font-weight: 900;
-    /* Black weight */
-    color: #232323;
-    margin: 0;
-    line-height: 1.2;
-    text-transform: uppercase;
 }
 
 /* Metadata Grid - Two Column Layout */
@@ -1207,9 +1288,8 @@ a {
     flex: 1;
     overflow-y: auto;
     background: #f5f5f5;
-    padding: 16px;
-    padding-top: 80px;
-    /* Match left column */
+    padding: 0 16px 16px 16px;
+    /* Starts on the exact same horizontal line as the metadata block in .modal-left */
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -1226,7 +1306,7 @@ a {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 8px;
+    border-radius: 0;
 }
 
 /* Desktop & Tablet Layout (768px+) */
@@ -1287,25 +1367,31 @@ a {
         display: none;
     }
 
+    .project-modal-body {
+        flex-direction: column;
+        overflow: visible;
+        flex: none;
+    }
+
+    .project-modal-title {
+        font-size: 24px;
+        padding: 28px 68px 16px 24px;
+    }
+
     .modal-left {
         width: 100%;
         min-width: auto;
-        padding: 24px;
-        padding-top: 80px;
+        padding: 0 24px 24px 24px;
         flex-shrink: 0;
         overflow-y: visible;
         /* Let parent scroll */
     }
 
     .modal-right {
-        padding-top: 16px;
+        padding-top: 8px;
         overflow-y: visible;
         /* Let parent scroll */
         min-height: auto;
-    }
-
-    .project-modal-title {
-        font-size: 24px;
     }
 
     .meta-row {
@@ -1313,21 +1399,23 @@ a {
         gap: 16px;
     }
 
-    /* Mobile: Close button fixed at bottom-right, aligned with avatar */
-    /* Must be positioned relative to viewport, not modal content */
+    /* Mobile: Tall dark rectangular close tab flush with top-right of the 90vh modal (or 100vh on small mobile) */
     .project-modal-overlay.active .project-modal-close {
         position: fixed;
-        top: auto !important;
+        top: 10vh !important;
         left: auto !important;
-        bottom: 24px;
-        right: 24px;
-        width: 56px;
-        height: 56px;
-        font-size: 32px;
-        border-radius: 50%;
-        background: white;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        z-index: 200;
+        bottom: auto !important;
+        right: calc(2.5% + 16px);
+        width: 44px;
+        height: 64px;
+        font-size: 36px;
+        border-radius: 0;
+        background: #232323;
+        color: #ffffff;
+        align-items: flex-end;
+        padding-bottom: 8px;
+        box-shadow: none;
+        z-index: 230;
     }
 }
 
@@ -1339,13 +1427,18 @@ a {
         border-radius: 0;
     }
 
-    .modal-left {
-        padding: 20px;
-        padding-top: 40px;
+    .project-modal-overlay.active .project-modal-close {
+        top: 0 !important;
+        right: 16px;
     }
 
     .project-modal-title {
         font-size: 20px;
+        padding: 24px 68px 16px 20px;
+    }
+
+    .modal-left {
+        padding: 0 20px 20px 20px;
     }
 }
 
@@ -1363,7 +1456,7 @@ a {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 8px;
+    border-radius: 0;
     transition: filter 0.2s ease;
 }
 
@@ -1413,7 +1506,7 @@ a {
 
 .gallery-video-wrapper {
     position: relative;
-    border-radius: 8px;
+    border-radius: 0;
     overflow: hidden;
     cursor: pointer;
     background: #000;
@@ -1505,7 +1598,7 @@ a {
 /* Vimeo Embed Wrapper */
 .gallery-vimeo-wrapper {
     position: relative;
-    border-radius: 8px;
+    border-radius: 0;
     overflow: hidden;
     aspect-ratio: 16 / 9;
     background: #000;

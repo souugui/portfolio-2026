@@ -149,9 +149,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Elements
         const heroSection = document.getElementById('hero');
-        const heroTagline = document.querySelector('.hero-tagline'); // Tagline target
-        const heroTitle = document.querySelector('.hero-title'); // Title target
-        const heroVideo = document.querySelector('.video-background');
+        const souuguiWordmark = document.getElementById('souugui-wordmark');
+        const cyanLayer = document.getElementById('opening-cyan-layer');
+        const orangeTagline = document.getElementById('opening-orange-tagline');
+        const taglineText = document.getElementById('opening-tagline-text');
+        const videoStage = document.getElementById('opening-video-stage');
+        const phrase1 = document.getElementById('statement-phrase-1');
+        const phrase2 = document.getElementById('statement-phrase-2');
+        const worksHeader = document.querySelector('.works-header');
+        const skipWorksBtn = document.getElementById('skip-to-works-btn');
         const projectTiles = document.querySelectorAll('.project-tile');
 
         // Avatar Wrapper Element
@@ -162,45 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const avatarTrigger = document.getElementById('avatar-trigger');
         const profileModal = document.getElementById('profile-modal');
         const closeModalBtn = document.querySelector('.close-modal');
-
-        // 1. Scroll Reveal for Avatar (Desktop) AND Filter (Desktop)
-        const heroObserverOptions = {
-            root: null,
-            threshold: 0.1 // Trigger when 10% of hero is visible (or rather when it leaves)
-        };
-
-        const heroObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                // Logic: 
-                // entry.isIntersecting === true means Hero is on screen.
-                // entry.isIntersecting === false means Hero is scroleld away.
-
-                const isHeroVisible = entry.isIntersecting;
-
-                // Desktop Logic Checks
-                const isDesktop = window.matchMedia("(min-width: 1200px)").matches;
-
-                if (isDesktop) {
-                    if (!isHeroVisible && entry.boundingClientRect.top < 0) {
-                        // Hero is GONE (scrolled down)
-                        if (profileWrapper) profileWrapper.classList.add('visible');
-                        if (filterCapsule) filterCapsule.classList.add('visible');
-                    } else {
-                        // Hero is VISIBLE
-                        if (profileWrapper) profileWrapper.classList.remove('visible');
-                        if (filterCapsule) filterCapsule.classList.remove('visible');
-                    }
-                } else {
-                    // Mobile/Tablet Logic (No scroll reveal needed mostly, but good cleanup)
-                    // Actually mobile filter is always visible so we don't toggle class 'visible' which handles opacity
-                    // But let's ensure we don't accidentally hide it if CSS relies on it
-                }
-            });
-        }, heroObserverOptions);
-
-        if (heroSection) {
-            heroObserver.observe(heroSection);
-        }
 
         function toggleModal(show) {
             if (show) {
@@ -236,47 +203,147 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 2. Parallax Effect for Video & Tagline Fade
-        let lastScrollY = window.scrollY;
+        // 2. Opening Scrollytelling Choreography (Stages 1, 2, 3 + Bottom 20% WORKS Reveal + Filter Positioning)
+        function clamp01(val) {
+            return Math.max(0, Math.min(1, val));
+        }
 
-        function updateParallax() {
+        function rangeProgress(p, start, end) {
+            if (end <= start) return p >= end ? 1 : 0;
+            return clamp01((p - start) / (end - start));
+        }
+
+        function updateOpeningScroll() {
+            if (!heroSection) return;
+
             const scrollY = window.scrollY;
+            const vh = window.innerHeight;
+            const totalScroll = Math.max(1, heroSection.offsetHeight - vh);
 
-            // Parallax Video
-            if (scrollY < window.innerHeight) {
-                const translateY = scrollY * 0.5;
-                if (heroVideo) {
-                    heroVideo.style.transform = `translate3d(0, ${translateY}px, 0)`;
-                }
+            // Reserve the final 20vh of #hero scroll for revealing the WORKS title in the bottom 20% of the screen
+            const revealHeight = vh * 0.20;
+            const choreoScroll = Math.max(1, totalScroll - revealHeight);
+            const p = clamp01(scrollY / choreoScroll);
 
-                // Text Fade Out
-                const fadeStart = 0;
-                // Desktop (>1200px): 400 | Mobile/Tablet (<1200px): 120 (much faster for logo overlap)
-                const isSmallScreen = window.innerWidth < 1200;
-                const fadeEnd = isSmallScreen ? 120 : 400;
+            // How many pixels of the bottom-20% WORKS reveal have been scrolled (0 -> revealHeight)
+            const revealLiftedPx = Math.max(0, Math.min(revealHeight, scrollY - choreoScroll));
 
-                let opacity = 1;
+            // Stage 1A (0.00 -> 0.22):
+            // - souugui starts 1% further down (calc(101vh - 24.5vw)) so the bottom of the 'u' letters is slightly cut
+            // - Slides up to -6.5vw, where the bottom straight part of 'u' sits at 17.85vw and 'g' descender extends to 20.71vw
+            // - Simultaneously, the orange tagline banner (top: 17.85vw, z-index: 4, behind souugui at z-index: 5) rises from 100vh -> 0vh
+            const s1Move = rangeProgress(p, 0.0, 0.22);
 
-                if (scrollY > fadeStart) {
-                    opacity = 1 - (scrollY - fadeStart) / (fadeEnd - fadeStart);
-                    if (opacity < 0) opacity = 0;
-                }
+            // Stage 1B (0.18 -> 0.30):
+            // - Wipe reveal of "animated and static storytelling" from left to right inside the orange strip
+            const s1Tagline = rangeProgress(p, 0.18, 0.30);
+            if (taglineText) {
+                const clipRight = (1 - s1Tagline) * 100;
+                taglineText.style.clipPath = `inset(0 ${clipRight.toFixed(1)}% 0 0)`;
+            }
 
-                if (heroTagline) {
-                    heroTagline.style.opacity = opacity;
-                    heroTagline.style.transform = `translateY(${scrollY * 0.2}px)`; // Subtle push down
-                }
+            // Stage 2A (0.31 -> 0.45):
+            // - Showreel video stage rises from 100vh and STOPS wiping the orange banner at 26.8vw
+            //   (leaving the orange tagline strip visible between 17.85vw and 26.8vw)
+            // Stage 2B (0.45 -> 0.55):
+            // - From 26.8vw, the showreel video, orange tagline banner, souugui wordmark, and cyan header
+            //   all scroll up TOGETHER at the same speed (-26.8vw) until the video is centered vertically (0vw)
+            // Showreel Lock / Hold (0.55 -> 0.65):
+            // - Showreel stays locked centered vertically at 0vh so the user can watch before scrolling past
+            // Stage 3A (0.65 -> 0.79):
+            // - Video stage continues scrolling up from 0vh -> -100vh so the orange statement banner fills the screen
+            const s2a = rangeProgress(p, 0.31, 0.45);
+            const s2b = rangeProgress(p, 0.45, 0.55);
+            const s3a = rangeProgress(p, 0.65, 0.79);
 
-                if (heroTitle) {
-                    heroTitle.style.opacity = opacity;
-                    heroTitle.style.transform = `translateY(${scrollY * 0.2}px)`; // Subtle push down
+            // Combined upward shift of the header group (cyan + souugui + orange tagline) once Stage 2B begins
+            const groupUpVw = -26.8 * s2b;
+            const groupUpVh = -100 * s3a;
+
+            if (cyanLayer) {
+                cyanLayer.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${groupUpVw.toFixed(2)}vw), 0)`;
+            }
+
+            if (souuguiWordmark) {
+                if (p <= 0.22) {
+                    const vhPart = 101 * (1 - s1Move);
+                    const vwPart = -24.5 * (1 - s1Move) + (-6.5 * s1Move);
+                    souuguiWordmark.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
+                } else {
+                    const vwPart = -6.5 + groupUpVw;
+                    souuguiWordmark.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
                 }
             }
 
-            lastScrollY = scrollY;
-            requestAnimationFrame(updateParallax);
+            if (orangeTagline) {
+                if (p <= 0.22) {
+                    const orangeY = 100 * (1 - s1Move);
+                    orangeTagline.style.transform = `translate3d(0, ${orangeY.toFixed(2)}vh, 0)`;
+                } else {
+                    orangeTagline.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${groupUpVw.toFixed(2)}vw), 0)`;
+                }
+            }
+
+            if (videoStage) {
+                if (p <= 0.45) {
+                    const vhPart = 100 * (1 - s2a);
+                    const vwPart = 26.8 * s2a;
+                    videoStage.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
+                } else if (p <= 0.55) {
+                    const vwPart = 26.8 * (1 - s2b);
+                    videoStage.style.transform = `translate3d(0, ${vwPart.toFixed(2)}vw, 0)`;
+                } else if (p <= 0.65) {
+                    // Locked centered vertically in the viewport (0.55 -> 0.65)
+                    videoStage.style.transform = 'translate3d(0, 0, 0)';
+                } else {
+                    const vhPart = -100 * s3a;
+                    // During the final 20vh of #hero scroll (revealLiftedPx: 0 -> 20vh),
+                    // lift the orange statement banner up by 20vh to reveal the stationary WORKS title in the bottom 20%
+                    videoStage.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh - ${revealLiftedPx.toFixed(1)}px), 0)`;
+                }
+            }
+
+            // Stage 3B (0.81 -> 0.98):
+            // - Horizontal text wipe while the orange statement banner is centered in the viewport
+            const wipeOut = rangeProgress(p, 0.81, 0.92);
+            const wipeIn = rangeProgress(p, 0.85, 0.98);
+            if (phrase1 && phrase2) {
+                phrase1.style.clipPath = `inset(0 0 0 ${(wipeOut * 100).toFixed(1)}%)`;
+                phrase2.style.clipPath = `inset(0 ${((1 - wipeIn) * 100).toFixed(1)}% 0 0)`;
+            }
+
+            // Stage 3C — Stationary Bottom-20% Reveal of WORKS Title, then Moving Up Together at the Section Division:
+            // Counter-translate only .works-header during the 20vh reveal so #works (.main-content) never has a transform
+            // (preserving native CSS position: sticky on #project-filter with zero scroll flickering).
+            if (worksHeader) {
+                if (scrollY < choreoScroll) {
+                    worksHeader.style.transform = `translate3d(0, ${revealHeight.toFixed(1)}px, 0)`;
+                } else if (scrollY < totalScroll) {
+                    const remainingToDivision = totalScroll - scrollY;
+                    worksHeader.style.transform = `translate3d(0, -${remainingToDivision.toFixed(1)}px, 0)`;
+                } else {
+                    worksHeader.style.transform = 'none';
+                }
+            }
+
+            // Right-side "works ↓" button:
+            // Appears when the ending position of the souugui wordmark animation is reached (p >= 0.21),
+            // placed below the 'i' letter, and disappears when the user reaches the works section (scrollY >= totalScroll)
+            if (skipWorksBtn) {
+                const showSkipBtn = p >= 0.21 && scrollY < totalScroll;
+                skipWorksBtn.classList.toggle('visible', showSkipBtn);
+            }
+
+            // Desktop Avatar Reveal:
+            const isDesktop = window.matchMedia("(min-width: 1200px)").matches;
+            if (isDesktop && profileWrapper) {
+                const shouldShowWorksUI = scrollY >= totalScroll + vh * 0.12;
+                profileWrapper.classList.toggle('visible', shouldShowWorksUI);
+            }
+
+            requestAnimationFrame(updateOpeningScroll);
         }
-        requestAnimationFrame(updateParallax);
+        requestAnimationFrame(updateOpeningScroll);
 
         // 3. Scroll Reveal for Project Tiles (Optional now since we forced opacity: 1, but good for future)
         // We kept opacity: 1 in CSS so this just adds class 'revealed' which might trigger other transforms if added
