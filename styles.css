@@ -82,19 +82,38 @@ a {
 .souugui-wordmark-wrap {
     position: absolute;
     top: 0;
-    left: -0.35vw;
-    width: 100.7vw;
+    left: -1vw;
+    width: 102vw;
     z-index: 5;
     will-change: transform;
-    /* Starting state: horizontally centered, 1% further down so it cuts just a little of the u letters */
-    transform: translate3d(0, calc(101vh - 24.5vw), 0);
+    /* V2 wordmark: center the ink edge-to-edge and let the u bottoms sit 1vh below the opening viewport. */
+    transform: translate3d(0, calc(101vh - 22.76vw), 0);
 }
 
 .souugui-wordmark-wrap svg {
-    display: block;
     width: 100%;
     height: auto;
     overflow: visible;
+}
+
+.souugui-wordmark-wrap .wordmark-desktop-svg {
+    display: block;
+    /* Bring the flat U tops to the screen edge while keeping their baseline on the orange edge. */
+    transform: scaleY(1.30);
+    transform-box: view-box;
+    transform-origin: 50% 71.3%;
+}
+
+.souugui-wordmark-wrap .wordmark-mobile-svg {
+    display: none;
+}
+
+.br-mobile {
+    display: none;
+}
+
+.br-desktop {
+    display: inline;
 }
 
 /* Stage 1B: Orange Tagline Strip (behind souugui wordmark so g descender overlaps on top) */
@@ -267,8 +286,49 @@ a {
     }
 }
 
-/* Mobile Breakpoint: Switch Videos & Scale Opening Typography */
-@media (max-width: 768px) {
+/* Portrait phone and tablet: two-line wordmark, matching tagline, and square showreel. */
+@media (max-width: 1199px) and (orientation: portrait) {
+    .souugui-wordmark-wrap {
+        /* Scaled so the glyphs span edge-to-edge (0vw -> 100vw) */
+        left: -1.045vw;
+        width: 103.18vw;
+        /* Align baseline of the 'i' letter (62.02vw at this scale) flush with the bottom of the screen */
+        transform: translate3d(0, calc(100vh - 62.02vw), 0);
+        transform: translate3d(0, calc(100svh - 62.02vw), 0);
+    }
+
+    .souugui-wordmark-wrap .wordmark-desktop-svg {
+        display: none;
+    }
+
+    .souugui-wordmark-wrap .wordmark-mobile-svg {
+        display: block;
+    }
+
+    .opening-orange-tagline {
+        /* Top of 'uu' is at 7.51vw (ending wordmark Y = -7.51vw), so baseline of 'i' (62.02vw - 7.51vw = 54.51vw) aligns to the end of the cyan shape */
+        top: 54.51vw;
+        height: calc(100vh - 54.51vw + 2px);
+    }
+
+    .opening-tagline-text {
+        /* Positioned below the g descender; sized so the line ends at the right side of the 'u' in 'gui' */
+        top: 9.4vw;
+        left: 4.8vw;
+        font-size: 4.25vw;
+    }
+
+    .opening-video-stage {
+        height: auto;
+    }
+
+    .opening-video-frame {
+        /* Mobile Vimeo showreel (1166388108) is 1:1 square (100vw x 100vw) — occupy strictly the video height */
+        width: 100%;
+        height: 100vw;
+        background-color: #000;
+    }
+
     .vimeo-wrapper.desktop {
         display: none;
     }
@@ -278,55 +338,55 @@ a {
     }
 
     .vimeo-wrapper.mobile iframe {
-        width: 100%;
-        height: 100%;
-        min-width: 100vw;
-        min-height: 100vh;
+        width: 100vw;
+        height: 100vw;
+        min-width: 100%;
+        min-height: 100%;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
 
-    .opening-tagline-text {
-        left: 5vw;
-        font-size: clamp(0.7rem, 3.3vw, 1.1rem);
+    .opening-statement-banner {
+        padding: 0 20px;
+    }
+}
+
+/* Portrait phone and tablet: use the four-line statement layout. */
+@media (max-width: 1199px) and (orientation: portrait) {
+    .br-desktop {
+        display: none;
     }
 
-    .opening-statement-banner {
-        padding: 0 12px;
+    .br-mobile {
+        display: inline;
     }
 
     .statement-phrase {
-        font-size: clamp(0.72rem, 3.6vw, 1.35rem);
-    }
-
-    .skip-works-btn {
-        top: 18.8vw;
-        right: 2.5vw;
-        font-size: clamp(0.55rem, 2.1vw, 0.75rem);
-        padding: 0.28em 0.5em 0.22em;
+        font-size: clamp(1.35rem, 7.1vw, 3.75rem);
+        line-height: 1.18;
     }
 }
 
 /* Tablet Refinements (768px - 1199px) */
 @media (min-width: 768px) and (max-width: 1199px) {
     .filter-capsule {
-        /* Increase from base. Base is scale(1). Mobile was 0.9. */
-        /* User asked for +40% (total ~1.4 scale) */
-        transform: scale(1.4);
+        transform: scale(1.2);
         transform-origin: bottom right;
         bottom: 40px;
-        /* Adjust spacing for larger size */
         right: 40px;
     }
 
     .profile-wrapper {
-        /* Increase Avatar size by 40% */
-        transform: scale(1.4);
+        transform: translateX(-40px) scale(1.4);
         transform-origin: bottom left;
         bottom: 40px;
         left: 40px;
+    }
+
+    .profile-wrapper.visible {
+        transform: translateX(0) scale(1.4);
     }
 }
 
@@ -395,6 +455,30 @@ a {
     color: var(--dark-ink);
 }
 
+/* Subtle, more transparent state when sitting over the showreel video stage */
+.skip-works-btn.visible.in-showreel {
+    opacity: 0.35;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.skip-works-btn.visible.in-showreel:hover {
+    background-color: rgba(255, 255, 255, 0.85);
+    color: #000000;
+}
+
+@media (max-width: 1199px) and (orientation: portrait) {
+    .skip-works-btn {
+        /* Aligned directly below the 'i' stem of 'gui' inside the orange strip on mobile */
+        top: 56.5vw;
+        right: 2.2vw;
+        font-size: clamp(0.85rem, 3.8vw, 1.15rem);
+        padding: 0.42em 0.62em;
+    }
+}
+
 /* Profile Avatar Trigger */
 /* Filter Capsule - Updated Visuals (Sharp Rectangular Bar, Inter Light/Black) */
 .filter-capsule {
@@ -438,15 +522,23 @@ a {
 
 /* Mobile Layout Default */
 .filter-capsule {
-    /* Center align with Avatar (64px height, bottom 24px) */
-    /* Avatar Center = 24px + 32px = 56px from bottom */
-    /* Filter approx 46px height. To center at 56px: 56 - 23 = 33px */
-    bottom: 33px;
-    right: 24px;
-
-    /* User req: Smaller on mobile */
-    transform: scale(0.9);
+    bottom: 13.5vh;
+    bottom: 13.5svh;
+    right: 20px;
+    transform: scale(0.88);
     transform-origin: bottom right;
+}
+
+@media (max-width: 1199px) {
+    .filter-capsule {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .filter-capsule.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
 }
 
 /* Tablet Refinements (768px - 1199px) */
@@ -454,28 +546,115 @@ a {
     .filter-capsule {
         transform: scale(1.2);
         transform-origin: bottom right;
-        bottom: 40px;
+        bottom: 14vh;
+        bottom: 14svh;
         right: 40px;
     }
 }
 
-/* Profile Avatar Wrapper */
+/* Profile Avatar Wrapper (Hidden until #works across all devices) */
 .profile-wrapper {
     position: fixed;
     z-index: 200;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* Align Left */
     gap: 16px;
 
-    /* Mobile: Bottom Left (Aligned with Logo) */
-    bottom: 24px;
-    left: 24px;
+    /* Mobile: Bottom Left above footer */
+    bottom: 13.5vh;
+    bottom: 13.5svh;
+    left: 20px;
     right: auto;
 
-    /* Animation State */
+    /* Hidden until #works section */
+    opacity: 0;
+    transform: translateX(-40px);
+    pointer-events: none;
     transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+}
+
+.profile-wrapper.visible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+/* Mobile Layout Default (< 768px): Compact horizontal filter clear of the profile trigger */
+@media (max-width: 767px) {
+    .filter-capsule {
+        bottom: 14.5vh;
+        bottom: 14.5svh;
+        right: 16px;
+        transform: none;
+    }
+
+    .filter-btn {
+        font-size: 15px;
+        padding: 6px 11px;
+    }
+
+    .profile-wrapper {
+        bottom: 13.5vh;
+        bottom: 13.5svh;
+        left: 16px;
+    }
+
+    .profile-trigger {
+        width: 56px;
+        height: 56px;
+    }
+}
+
+/* Ultra-Small Smartphone Screens (e.g. iPhone SE 375px / 320px): Vertical Filter */
+@media (max-width: 380px) {
+    .filter-capsule {
+        flex-direction: column;
+        align-items: stretch;
+        bottom: 13.5vh;
+        bottom: 13.5svh;
+        right: 16px;
+        transform: none;
+    }
+
+    .filter-btn {
+        font-size: 14px;
+        padding: 5px 12px;
+        text-align: center;
+    }
+}
+
+/* Phone landscape: stack the filter at the right, aligned with the profile trigger. */
+@media (max-width: 1199px) and (orientation: landscape) and (max-height: 500px) {
+    .filter-capsule {
+        --landscape-profile-height: 7vw;
+        flex-direction: column;
+        align-items: stretch;
+        right: 16px;
+        top: calc(86.5vh + 6px - var(--landscape-profile-height));
+        top: calc(86.5svh + 6px - var(--landscape-profile-height));
+        bottom: auto;
+        width: max-content;
+        transform: none;
+    }
+
+    .profile-wrapper {
+        bottom: calc(13.5vh - 6px);
+        bottom: calc(13.5svh - 6px);
+    }
+
+    .filter-btn {
+        font-size: 14px;
+        line-height: 1.2;
+        padding: 4px 10px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 767px) and (orientation: landscape) and (max-height: 500px) {
+    .filter-capsule {
+        --landscape-profile-height: 64px;
+    }
 }
 
 .profile-trigger {
@@ -833,14 +1012,14 @@ a {
     position: fixed;
     top: 0;
     left: 0;
-    width: 24px;
-    height: 24px;
+    width: 20.4px;
+    height: 20.4px;
     background-color: #FFFFFF;
-    box-shadow: 7px 7px 0px var(--cyan-active);
+    box-shadow: 6px 6px 0px var(--cyan-active);
     pointer-events: none;
     z-index: 9999;
-    margin-left: -12px;
-    margin-top: -12px;
+    margin-left: -10.2px;
+    margin-top: -10.2px;
     transition: box-shadow 0.12s cubic-bezier(0.2, 0.8, 0.2, 1);
     will-change: transform, box-shadow;
 }
@@ -849,7 +1028,7 @@ a {
     box-shadow: 2px 2px 0px var(--cyan-active);
 }
 
-@media (hover: none), (pointer: coarse) {
+@media (hover: none), (pointer: coarse), (max-width: 1199px) {
     .custom-cursor {
         display: none !important;
     }
@@ -862,12 +1041,15 @@ a {
     /* Overlaps the final 20vh of #hero so the rising orange banner reveals WORKS in the bottom 20% */
     margin-top: -20vh;
     padding-top: 0;
-    padding-bottom: 48px;
-    min-height: 92vh;
+    padding-bottom: 12px;
+    height: 86vh;
+    height: 86svh;
+    min-height: 0;
     z-index: 10;
     overflow-x: clip;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 /* Works Section Header (Erica One) */
@@ -876,28 +1058,48 @@ a {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin-bottom: 2.2vh;
+    margin-bottom: 1vh;
     overflow: hidden;
     will-change: transform;
+    flex-shrink: 0;
 }
 
 .works-title {
     font-family: 'Erica One', cursive, sans-serif;
     font-weight: 400;
-    font-size: clamp(5.5rem, 17.5vw, 225px);
+    font-size: clamp(4.8rem, 17.5vw, 225px);
     line-height: 0.72;
     color: var(--cyan-active);
     text-transform: uppercase;
     letter-spacing: 0;
     margin: 0;
-    /* Top-align uppercase glyphs to the top edge of the section */
-    transform: translateY(-0.08em);
+    /* Top-align uppercase glyphs flush to the top edge of the section */
+    transform: translateY(-0.085em);
     user-select: none;
+}
+
+@media (max-width: 768px) {
+    .works-title {
+        font-size: 25.1vw;
+    }
+}
+
+@media (max-width: 767px) and (orientation: landscape) {
+    .works-title {
+        font-size: 15.06vw;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) and (orientation: landscape) and (max-height: 500px) {
+    .works-title {
+        font-size: 10.5vw;
+    }
 }
 
 /* Horizontal Infinite Carousel Stage */
 .carousel-stage-wrap {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -905,7 +1107,7 @@ a {
     position: relative;
     width: 100%;
     user-select: none;
-    padding: 1vh 0 2vh 0;
+    padding: 0;
 }
 
 .carousel-viewport {
@@ -913,7 +1115,7 @@ a {
     margin: 0 auto;
     overflow-x: hidden;
     overflow-y: visible;
-    padding: 1.2vh 0 0.6vh 0;
+    padding: 0.8vh 0 0.4vh 0;
     position: relative;
     touch-action: pan-y;
 }
@@ -932,7 +1134,7 @@ a {
     flex-shrink: 0;
     overflow: hidden;
     background-color: #2a2a2a;
-    height: 40vh;
+    height: 36vh;
     border-radius: 0;
     scale: 1;
     transform-origin: 0 0;
@@ -941,24 +1143,53 @@ a {
 
 /* Staggered Heights (Horizontal Masonry feel) */
 .carousel-card[data-stagger="0"] {
-    height: 42vh;
+    height: 38vh;
     align-self: center;
 }
 
 .carousel-card[data-stagger="1"] {
-    height: 31vh;
+    height: 28vh;
     align-self: flex-start;
 }
 
 .carousel-card[data-stagger="2"] {
-    height: 35vh;
+    height: 32vh;
     align-self: flex-end;
 }
 
 @media (max-width: 767px) {
-    .carousel-card[data-stagger="0"] { height: 34vh; }
-    .carousel-card[data-stagger="1"] { height: 25vh; }
-    .carousel-card[data-stagger="2"] { height: 29vh; }
+    .main-content {
+        justify-content: flex-start;
+        padding-bottom: 11vh;
+        padding-bottom: 11svh;
+    }
+
+    .carousel-stage-wrap {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .carousel-card[data-stagger="0"] { height: 28vh; height: 28svh; }
+    .carousel-card[data-stagger="1"] { height: 21vh; height: 21svh; }
+    .carousel-card[data-stagger="2"] { height: 24vh; height: 24svh; }
+
+}
+
+@media (max-width: 1199px) and (orientation: landscape) and (max-height: 500px) {
+    .carousel-stage-wrap {
+        /* Reuse the title's lost line height so the title-to-carousel gap stays fixed. */
+        --landscape-carousel-growth: 2.52vw;
+    }
+
+    .carousel-card[data-stagger="0"] { height: calc(30svh + var(--landscape-carousel-growth)); }
+    .carousel-card[data-stagger="1"] { height: calc(22.5svh + var(--landscape-carousel-growth)); }
+    .carousel-card[data-stagger="2"] { height: calc(25.5svh + var(--landscape-carousel-growth)); }
+}
+
+@media (max-width: 767px) and (orientation: landscape) and (max-height: 500px) {
+    .carousel-stage-wrap {
+        --landscape-carousel-growth: 3.6144vw;
+    }
 }
 
 .carousel-card img,
@@ -1100,20 +1331,55 @@ a {
     }
 }
 
-/* Footer */
+/* Keep the phone carousel instruction centered below the carousel. */
+@media (max-width: 767px) {
+    .carousel-hint {
+        margin-top: 10px;
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 1199px) and (orientation: landscape) and (max-height: 500px) {
+    .carousel-hint {
+        margin-top: 16px;
+        transform: translateY(20px);
+    }
+}
+
+/* Footer (Sized so #works + .site-footer = 100vh/100svh on the final scroll) */
 .site-footer {
-    padding: 64px;
+    height: 14vh;
+    height: 14svh;
+    padding: 12px 24px;
     background-color: var(--bg-color);
     text-align: center;
     color: var(--text-light);
     font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
 
 .site-footer .social-links {
-    margin-top: 16px;
+    margin-top: 8px;
     display: flex;
     justify-content: center;
     gap: 24px;
+}
+
+@media (max-width: 767px) {
+    .site-footer {
+        font-size: 12px;
+        padding: 8px 16px;
+    }
+
+    .site-footer .social-links {
+        margin-top: 6px;
+        gap: 18px;
+    }
 }
 
 /* Utilities */

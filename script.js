@@ -330,11 +330,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Elements
         const heroSection = document.getElementById('hero');
+        const stickyViewport = document.querySelector('.opening-sticky-viewport');
         const souuguiWordmark = document.getElementById('souugui-wordmark');
         const cyanLayer = document.getElementById('opening-cyan-layer');
         const orangeTagline = document.getElementById('opening-orange-tagline');
         const taglineText = document.getElementById('opening-tagline-text');
         const videoStage = document.getElementById('opening-video-stage');
+        const videoFrame = document.getElementById('opening-video-frame');
         const phrase1 = document.getElementById('statement-phrase-1');
         const phrase2 = document.getElementById('statement-phrase-2');
         const worksHeader = document.querySelector('.works-header');
@@ -394,93 +396,145 @@ document.addEventListener('DOMContentLoaded', () => {
             return clamp01((p - start) / (end - start));
         }
 
+        const portraitHeroQuery = window.matchMedia('(max-width: 1199px) and (orientation: portrait)');
+
         function updateOpeningScroll() {
             if (!heroSection) return;
 
             const scrollY = window.scrollY;
             const vh = window.innerHeight;
-            const totalScroll = Math.max(1, heroSection.offsetHeight - vh);
+            const vw = window.innerWidth;
+            const isPortraitHero = portraitHeroQuery.matches;
+
+            // Use stickyViewport.offsetHeight (exact CSS 100vh in px) so totalScroll & revealHeight
+            // match CSS 470vh and margin-top: -20vh to the exact pixel across mobile & desktop browsers
+            const stickyVh = stickyViewport ? stickyViewport.offsetHeight : vh;
+            const videoFrameH = videoFrame ? videoFrame.offsetHeight : stickyVh;
+            const totalScroll = Math.max(1, heroSection.offsetHeight - stickyVh);
 
             // Reserve the final 20vh of #hero scroll for revealing the WORKS title in the bottom 20% of the screen
-            const revealHeight = vh * 0.20;
+            const revealHeight = stickyVh * 0.20;
             const choreoScroll = Math.max(1, totalScroll - revealHeight);
             const p = clamp01(scrollY / choreoScroll);
 
-            // How many pixels of the bottom-20% WORKS reveal have been scrolled (0 -> revealHeight)
-            const revealLiftedPx = Math.max(0, Math.min(revealHeight, scrollY - choreoScroll));
+            // Lift the orange banner by exactly revealHeight over the final 20vh so its bottom edge meets the top of WORKS flush
+            const revealProgress = clamp01((scrollY - choreoScroll) / Math.max(1, revealHeight));
+            const revealLiftedPx = revealProgress * revealHeight;
 
-            // Stage 1A (0.00 -> 0.22):
-            // - souugui starts 1% further down (calc(101vh - 24.5vw)) so the bottom of the 'u' letters is slightly cut
-            // - Slides up to -6.5vw, where the bottom straight part of 'u' sits at 17.85vw and 'g' descender extends to 20.71vw
-            // - Simultaneously, the orange tagline banner (top: 17.85vw, z-index: 4, behind souugui at z-index: 5) rises from 100vh -> 0vh
+            // Stage 1A (0.00 -> 0.22)
             const s1Move = rangeProgress(p, 0.0, 0.22);
 
-            // Stage 1B (0.18 -> 0.30):
-            // - Wipe reveal of "animated and static storytelling" from left to right inside the orange strip
+            // Stage 1B (0.18 -> 0.30): Wipe reveal of "animated and static storytelling"
             const s1Tagline = rangeProgress(p, 0.18, 0.30);
             if (taglineText) {
                 const clipRight = (1 - s1Tagline) * 100;
                 taglineText.style.clipPath = `inset(0 ${clipRight.toFixed(1)}% 0 0)`;
             }
 
-            // Stage 2A (0.31 -> 0.45):
-            // - Showreel video stage rises from 100vh and STOPS wiping the orange banner at 26.8vw
-            //   (leaving the orange tagline strip visible between 17.85vw and 26.8vw)
-            // Stage 2B (0.45 -> 0.55):
-            // - From 26.8vw, the showreel video, orange tagline banner, souugui wordmark, and cyan header
-            //   all scroll up TOGETHER at the same speed (-26.8vw) until the video is centered vertically (0vw)
-            // Showreel Lock / Hold (0.55 -> 0.65):
-            // - Showreel stays locked centered vertically at 0vh so the user can watch before scrolling past
-            // Stage 3A (0.65 -> 0.79):
-            // - Video stage continues scrolling up from 0vh -> -100vh so the orange statement banner fills the screen
+            // Stage 2A (0.31 -> 0.45), Stage 2B (0.45 -> 0.55), Lock (0.55 -> 0.65), Stage 3A (0.65 -> 0.79)
             const s2a = rangeProgress(p, 0.31, 0.45);
             const s2b = rangeProgress(p, 0.45, 0.55);
             const s3a = rangeProgress(p, 0.65, 0.79);
 
-            // Combined upward shift of the header group (cyan + souugui + orange tagline) once Stage 2B begins
-            const groupUpVw = -26.8 * s2b;
-            const groupUpVh = -100 * s3a;
+            if (isPortraitHero) {
+                // Portrait phone/tablet coordinates for the 2-line wordmark and square showreel:
+                // - At p = 0.00: baseline of 'i' (60.53vw) aligns flush with bottom of screen (vh - 0.6053 * vw)
+                // - At p = 0.22: top of 'uu' (7.33vw) aligns flush with top of screen (-0.0733 * vw),
+                //   and baseline of 'i' (60.53vw - 7.33vw = 53.20vw) aligns with the bottom of the cyan shape
+                const startWordmarkY = vh - 0.6202 * vw;
+                const endWordmarkY = -0.0751 * vw;
+                const stopYPx = Math.min(stickyVh * 0.62, 0.70 * vw);
+                const lockY = Math.max(0, (stickyVh - videoFrameH) / 2);
 
-            if (cyanLayer) {
-                cyanLayer.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${groupUpVw.toFixed(2)}vw), 0)`;
-            }
+                const groupShift2B = -(stopYPx - lockY) * s2b;
+                const groupShift3A = -(lockY + videoFrameH) * s3a;
+                const totalGroupShiftPx = groupShift2B + groupShift3A;
 
-            if (souuguiWordmark) {
-                if (p <= 0.22) {
-                    const vhPart = 101 * (1 - s1Move);
-                    const vwPart = -24.5 * (1 - s1Move) + (-6.5 * s1Move);
-                    souuguiWordmark.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
-                } else {
-                    const vwPart = -6.5 + groupUpVw;
-                    souuguiWordmark.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
+                if (cyanLayer) {
+                    cyanLayer.style.transform = `translate3d(0, ${totalGroupShiftPx.toFixed(1)}px, 0)`;
                 }
-            }
 
-            if (orangeTagline) {
-                if (p <= 0.22) {
-                    const orangeY = 100 * (1 - s1Move);
-                    orangeTagline.style.transform = `translate3d(0, ${orangeY.toFixed(2)}vh, 0)`;
-                } else {
-                    orangeTagline.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${groupUpVw.toFixed(2)}vw), 0)`;
+                if (souuguiWordmark) {
+                    if (p <= 0.22) {
+                        const curY = startWordmarkY * (1 - s1Move) + endWordmarkY * s1Move;
+                        souuguiWordmark.style.transform = `translate3d(0, ${curY.toFixed(1)}px, 0)`;
+                    } else {
+                        const curY = endWordmarkY + totalGroupShiftPx;
+                        souuguiWordmark.style.transform = `translate3d(0, ${curY.toFixed(1)}px, 0)`;
+                    }
                 }
-            }
 
-            if (videoStage) {
-                if (p <= 0.45) {
-                    const vhPart = 100 * (1 - s2a);
-                    const vwPart = 26.8 * s2a;
-                    videoStage.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
-                } else if (p <= 0.55) {
-                    const vwPart = 26.8 * (1 - s2b);
-                    videoStage.style.transform = `translate3d(0, ${vwPart.toFixed(2)}vw, 0)`;
-                } else if (p <= 0.65) {
-                    // Locked centered vertically in the viewport (0.55 -> 0.65)
-                    videoStage.style.transform = 'translate3d(0, 0, 0)';
-                } else {
-                    const vhPart = -100 * s3a;
-                    // During the final 20vh of #hero scroll (revealLiftedPx: 0 -> 20vh),
-                    // lift the orange statement banner up by 20vh to reveal the stationary WORKS title in the bottom 20%
-                    videoStage.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh - ${revealLiftedPx.toFixed(1)}px), 0)`;
+                if (orangeTagline) {
+                    if (p <= 0.22) {
+                        const orangeY = stickyVh * (1 - s1Move);
+                        orangeTagline.style.transform = `translate3d(0, ${orangeY.toFixed(1)}px, 0)`;
+                    } else {
+                        orangeTagline.style.transform = `translate3d(0, ${totalGroupShiftPx.toFixed(1)}px, 0)`;
+                    }
+                }
+
+                if (videoStage) {
+                    if (p <= 0.45) {
+                        const curY = stickyVh * (1 - s2a) + stopYPx * s2a;
+                        videoStage.style.transform = `translate3d(0, ${curY.toFixed(1)}px, 0)`;
+                    } else if (p <= 0.55) {
+                        const curY = stopYPx + groupShift2B;
+                        videoStage.style.transform = `translate3d(0, ${curY.toFixed(1)}px, 0)`;
+                    } else if (p <= 0.65) {
+                        videoStage.style.transform = `translate3d(0, ${lockY.toFixed(1)}px, 0)`;
+                    } else {
+                        const curY = lockY + groupShift3A - revealLiftedPx;
+                        videoStage.style.transform = `translate3d(0, ${curY.toFixed(1)}px, 0)`;
+                    }
+                }
+            } else {
+                // Desktop and landscape phone/tablet choreography
+                // At 102vw wide, the v2 wordmark's rounded u bottoms are 22.76vw below its SVG top.
+                // The straight u terminals sit 0.28vw above them: align those terminals to the orange edge.
+                const wordmarkUBottomVw = 22.76;
+                const wordmarkStraightUBottomVw = wordmarkUBottomVw - 0.28;
+                const wordmarkSettledVw = 17.85 - wordmarkStraightUBottomVw;
+                const groupUpVw = -26.8 * s2b;
+                const groupUpVh = -100 * s3a;
+
+                if (cyanLayer) {
+                    cyanLayer.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${groupUpVw.toFixed(2)}vw), 0)`;
+                }
+
+                if (souuguiWordmark) {
+                    if (p <= 0.22) {
+                        const vhPart = 101 * (1 - s1Move);
+                        const vwPart = -wordmarkUBottomVw * (1 - s1Move) + wordmarkSettledVw * s1Move;
+                        souuguiWordmark.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
+                    } else {
+                        const vwPart = wordmarkSettledVw + groupUpVw;
+                        souuguiWordmark.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
+                    }
+                }
+
+                if (orangeTagline) {
+                    if (p <= 0.22) {
+                        const orangeY = 100 * (1 - s1Move);
+                        orangeTagline.style.transform = `translate3d(0, ${orangeY.toFixed(2)}vh, 0)`;
+                    } else {
+                        orangeTagline.style.transform = `translate3d(0, calc(${groupUpVh.toFixed(2)}vh + ${groupUpVw.toFixed(2)}vw), 0)`;
+                    }
+                }
+
+                if (videoStage) {
+                    if (p <= 0.45) {
+                        const vhPart = 100 * (1 - s2a);
+                        const vwPart = 26.8 * s2a;
+                        videoStage.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh + ${vwPart.toFixed(2)}vw), 0)`;
+                    } else if (p <= 0.55) {
+                        const vwPart = 26.8 * (1 - s2b);
+                        videoStage.style.transform = `translate3d(0, ${vwPart.toFixed(2)}vw, 0)`;
+                    } else if (p <= 0.65) {
+                        videoStage.style.transform = 'translate3d(0, 0, 0)';
+                    } else {
+                        const vhPart = -100 * s3a;
+                        videoStage.style.transform = `translate3d(0, calc(${vhPart.toFixed(2)}vh - ${revealLiftedPx.toFixed(1)}px), 0)`;
+                    }
                 }
             }
 
@@ -494,8 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Stage 3C — Stationary Bottom-20% Reveal of WORKS Title, then Moving Up Together at the Section Division:
-            // Counter-translate only .works-header during the 20vh reveal so #works (.main-content) never has a transform
-            // (preserving native CSS position: sticky on #project-filter with zero scroll flickering).
             if (worksHeader) {
                 if (scrollY < choreoScroll) {
                     worksHeader.style.transform = `translate3d(0, ${revealHeight.toFixed(1)}px, 0)`;
@@ -508,18 +560,35 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Right-side "works ↓" button:
-            // Appears when the ending position of the souugui wordmark animation is reached (p >= 0.21),
-            // placed below the 'i' letter, and disappears when the user reaches the works section (scrollY >= totalScroll)
+            // Appears when the ending position of the souugui wordmark animation is reached (p >= 0.21)
+            // Becomes translucent only while the button's center sits over the visible video frame
+            // and disappears when reaching the works section (scrollY >= totalScroll)
             if (skipWorksBtn) {
                 const showSkipBtn = p >= 0.21 && scrollY < totalScroll;
                 skipWorksBtn.classList.toggle('visible', showSkipBtn);
+                let overVideo = false;
+                if (showSkipBtn && videoFrame) {
+                    const buttonRect = skipWorksBtn.getBoundingClientRect();
+                    const videoRect = videoFrame.getBoundingClientRect();
+                    const videoContentTop = videoRect.top + videoFrame.clientTop;
+                    const buttonCenterX = (buttonRect.left + buttonRect.right) / 2;
+                    const buttonCenterY = (buttonRect.top + buttonRect.bottom) / 2;
+                    overVideo = buttonCenterX >= videoRect.left &&
+                        buttonCenterX <= videoRect.right &&
+                        buttonCenterY >= videoContentTop &&
+                        buttonCenterY <= videoRect.bottom;
+                }
+                skipWorksBtn.classList.toggle('in-showreel', overVideo);
             }
 
-            // Desktop Avatar Reveal:
-            const isDesktop = window.matchMedia("(min-width: 1200px)").matches;
-            if (isDesktop && profileWrapper) {
-                const shouldShowWorksUI = scrollY >= totalScroll + vh * 0.12;
+            // Profile Modal Trigger & Mobile/Tablet Filter Reveal:
+            // Show ONLY when the user has scrolled into the #works section body (past the bottom-20% WORKS wipe-in)
+            const shouldShowWorksUI = scrollY >= totalScroll + stickyVh * 0.35;
+            if (profileWrapper) {
                 profileWrapper.classList.toggle('visible', shouldShowWorksUI);
+            }
+            if (filterCapsule) {
+                filterCapsule.classList.toggle('visible', shouldShowWorksUI);
             }
 
             requestAnimationFrame(updateOpeningScroll);
