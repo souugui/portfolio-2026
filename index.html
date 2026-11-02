@@ -7,7 +7,7 @@
     <title>Gui Sousa | Designer</title>
     <meta name="description"
         content="Portfolio of Gui Sousa, a Designer specialized in 3D storytelling.">
-    <link rel="stylesheet" href="styles.css?v=2.25">
+    <link rel="stylesheet" href="styles.css?v=2.26">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -198,13 +198,12 @@
     </main>
 
     <!-- Project Detail Modal -->
-    <div id="project-modal" class="project-modal-overlay" aria-hidden="true">
-        <!-- Close Button - outside content for proper fixed positioning on mobile -->
-        <button class="project-modal-close" aria-label="Close">×</button>
-
+    <div id="project-modal" class="project-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="project-modal-title" aria-hidden="true">
         <div class="project-modal-content">
-
-            <h2 class="project-modal-title">Project Title</h2>
+            <header class="project-modal-header">
+                <h2 id="project-modal-title" class="project-modal-title">Project Title</h2>
+                <button class="project-modal-close" aria-label="Close project">×</button>
+            </header>
 
             <div class="project-modal-body">
                 <!-- Left Column: Info -->
@@ -267,7 +266,7 @@
         </div>
     </footer>
 
-    <script src="script.js?v=2.17"></script>
+    <script src="script.js?v=2.18"></script>
     <script src="projects-data.js"></script>
 </body>
 

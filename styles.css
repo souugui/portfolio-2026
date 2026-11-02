@@ -681,16 +681,15 @@ a {
     display: none;
     /* Hidden on Mobile/Tablet (No Hover) */
     background-color: white;
-    padding: 6px 16px;
-    border-radius: 20px;
+    padding: 8px 16px;
+    border-radius: 0;
     font-size: 1.25rem;
-    /* User requested 1.25rem */
-    font-weight: 600;
+    font-weight: 900;
     color: #ff6f00;
     text-transform: lowercase;
     /* User requested lowercase */
     letter-spacing: 0.5px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 6px 6px 0 var(--cyan-active);
     opacity: 0;
     transform: translateY(-5px);
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -1464,6 +1463,7 @@ a {
     width: 95%;
     max-width: 1500px;
     height: 85vh;
+    height: 85svh;
     background: #f5f5f5;
     /* Match gallery background */
     border-radius: 0;
@@ -1487,12 +1487,22 @@ a {
     overflow: hidden;
 }
 
-/* Close Button - Tall dark rectangular tab flush with the top edge of the modal */
+.project-modal-header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex: 0 0 auto;
+    min-height: 76px;
+    background: #f5f5f5;
+}
+
+/* The close tab and title stay together above the scrolling project content. */
 .project-modal-close {
-    position: absolute;
-    /* Flush with top edge of the 85vh bottom-aligned modal */
-    top: 15vh;
-    right: calc((100% - min(95%, 1500px)) / 2 + 16px);
+    position: relative;
+    flex: 0 0 auto;
+    margin-right: 16px;
     width: 48px;
     height: 76px;
     border: none;
@@ -1508,7 +1518,7 @@ a {
     padding-bottom: 10px;
     transition: background-color 0.2s ease, opacity 0.2s ease;
     color: #ffffff;
-    z-index: 230;
+    z-index: 1;
 }
 
 .project-modal-close:hover {
@@ -1522,8 +1532,10 @@ a {
     /* Black weight */
     color: #232323;
     margin: 0;
-    padding: 36px 88px 28px 40px;
-    flex-shrink: 0;
+    padding: 36px 16px 28px 40px;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
     line-height: 1.2;
     text-transform: uppercase;
 }
@@ -1685,8 +1697,8 @@ a {
     border-radius: 0;
 }
 
-/* Desktop & Tablet Layout (768px+) */
-@media (min-width: 768px) {
+/* Two-column project layout on desktop and in landscape. */
+@media (min-width: 1200px), (orientation: landscape) {
     .modal-left {
         text-align: left;
     }
@@ -1726,32 +1738,31 @@ a {
     }
 }
 
-/* Mobile Only (<768px) */
-@media (max-width: 767px) {
+/* Phone and tablet portrait: one scrolling body under the fixed header. */
+@media (max-width: 1199px) and (orientation: portrait) {
     .project-modal-content {
         flex-direction: column;
         height: 90vh;
+        height: 90svh;
         width: 95%;
-        overflow-y: auto;
-        /* Full modal scrolls */
-        /* Hide scrollbar */
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-    }
-
-    .project-modal-content::-webkit-scrollbar {
-        display: none;
+        overflow: hidden;
     }
 
     .project-modal-body {
         flex-direction: column;
-        overflow: visible;
-        flex: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .project-modal-body::-webkit-scrollbar {
+        display: none;
     }
 
     .project-modal-title {
         font-size: 24px;
-        padding: 28px 68px 16px 24px;
+        padding: 28px 16px 16px 24px;
     }
 
     .modal-left {
@@ -1767,7 +1778,12 @@ a {
         padding-top: 8px;
         overflow-y: visible;
         /* Let parent scroll */
+        flex: none;
         min-height: auto;
+    }
+
+    .project-modal-metadata {
+        flex-direction: column;
     }
 
     .meta-row {
@@ -1775,46 +1791,56 @@ a {
         gap: 16px;
     }
 
-    /* Mobile: Tall dark rectangular close tab flush with top-right of the 90vh modal (or 100vh on small mobile) */
-    .project-modal-overlay.active .project-modal-close {
-        position: fixed;
-        top: 10vh !important;
-        left: auto !important;
-        bottom: auto !important;
-        right: calc(2.5% + 16px);
+    .project-modal-close {
         width: 44px;
         height: 64px;
         font-size: 36px;
-        border-radius: 0;
-        background: #232323;
-        color: #ffffff;
-        align-items: flex-end;
-        padding-bottom: 8px;
-        box-shadow: none;
-        z-index: 230;
     }
 }
 
-/* Small Mobile (<480px) */
-@media (max-width: 480px) {
+/* Small portrait phone: the project panel fills the viewport. */
+@media (max-width: 480px) and (orientation: portrait) {
     .project-modal-content {
         width: 100%;
         height: 100vh;
+        height: 100svh;
         border-radius: 0;
-    }
-
-    .project-modal-overlay.active .project-modal-close {
-        top: 0 !important;
-        right: 16px;
     }
 
     .project-modal-title {
         font-size: 20px;
-        padding: 24px 68px 16px 20px;
+        padding: 24px 12px 16px 20px;
     }
 
     .modal-left {
         padding: 0 20px 20px 20px;
+    }
+}
+
+/* A shorter header leaves useful gallery space on rotated phones. */
+@media (orientation: landscape) and (max-height: 500px) {
+    .project-modal-header {
+        min-height: 56px;
+    }
+
+    .project-modal-title {
+        font-size: 20px;
+        padding: 16px 12px 14px 24px;
+    }
+
+    .project-modal-close {
+        width: 44px;
+        height: 56px;
+        font-size: 34px;
+        padding-bottom: 6px;
+    }
+
+    .modal-left {
+        padding: 0 20px 20px;
+    }
+
+    .project-modal-metadata {
+        gap: 16px;
     }
 }
 

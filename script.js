@@ -695,6 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const projectModal = document.getElementById('project-modal');
         const projectModalClose = document.querySelector('.project-modal-close');
+        const projectModalBody = document.querySelector('.project-modal-body');
         const modalTitle = document.querySelector('.project-modal-title');
         const modalRight = document.querySelector('.modal-right');
         const modalLeft = document.querySelector('.modal-left');
@@ -702,8 +703,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Desktop: Forward scroll from left column to right column (gallery)
         if (modalLeft && modalRight) {
             modalLeft.addEventListener('wheel', (e) => {
-                // Only on desktop (1024px+)
-                if (window.innerWidth >= 1024) {
+                // On roomy desktop screens the left column can control the gallery.
+                if (window.innerWidth >= 1200) {
                     modalRight.scrollTop += e.deltaY;
                     e.preventDefault();
                 }
@@ -938,6 +939,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
             // Show Modal
+            if (projectModalBody) projectModalBody.scrollTop = 0;
+            if (modalLeft) modalLeft.scrollTop = 0;
+            if (modalRight) modalRight.scrollTop = 0;
             projectModal.classList.add('active');
             projectModal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
